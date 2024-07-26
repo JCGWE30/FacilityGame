@@ -7,18 +7,20 @@ public class FacilityNetworking : MonoBehaviour
 {
     [SerializeField]
     private Transform otherPlayer;
+
+    private NetworkManager network;
     // Start is called before the first frame update
     void Start()
     {
-        if (Application.isEditor)
+        network = NetworkManager.Singleton;
+        if (!Application.isEditor)
         {
-            NetworkManager.Singleton.StartHost();
-            ServerStart();
-            ClientStart();
+            network.StartHost();
+            HostStart();
         }
         else
         {
-            NetworkManager.Singleton.StartClient();
+            network.StartClient();
             ClientStart();
         }
 
@@ -31,6 +33,13 @@ public class FacilityNetworking : MonoBehaviour
         
     }
 
+    private void HostStart()
+    {
+        ClientStart();
+        ServerStart();
+        ConnectPlayer(NetworkManager.Singleton.LocalClientId);
+    }
+
     private void ClientStart()
     {
 
@@ -38,14 +47,19 @@ public class FacilityNetworking : MonoBehaviour
 
     private void ServerStart()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += (obj) =>
-        {
-            Debug.Log(obj + " has Connected");
-        };
-
-        NetworkManager.Singleton.OnClientDisconnectCallback += (obj) =>
+        network.OnClientConnectedCallback += ConnectPlayer;
+        network.OnClientDisconnectCallback += (obj) =>
         {
             Debug.Log(obj + " has Disconnected");
         };
+    }
+
+    private void ConnectPlayer(ulong id)
+    {
+        network.ConnectedClients[id].PlayerObject.GetComponent<PlayerNetworker>().playerState.Value = new PlayerNetworker.PlayerState
+        {
+            name = "potatoes"
+        };
+        Debug.Log(id + " has Connected");
     }
 }
