@@ -15,6 +15,8 @@ public class CommandManager : MonoBehaviour
     private InventoryManager inven;
     public TMP_InputField CommandBox;
     public LayerMask floormask;
+
+    public GameObject crate;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,8 @@ public class CommandManager : MonoBehaviour
     {
         //ItemHolder holder = GetComponent<ItemHolder>();
         switch (command){
+            case "spawncrate":
+
             case "giveitem":
                 break;
             case "spawnitem":

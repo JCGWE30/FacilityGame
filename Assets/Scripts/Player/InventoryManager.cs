@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -211,6 +212,7 @@ public class InventoryManager : MonoBehaviour
                         droppedItem.transform.position = gameObject.transform.position;
                         dropItem.transform.parent = droppedItem.transform;
                         droppedItem.AddComponent<DroppedItem>();
+                        FacilityNetworking.instance.DropItem(droppedItem);
                     }
                 }
                 else if (hoveredSlot != null)

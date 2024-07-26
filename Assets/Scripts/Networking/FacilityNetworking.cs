@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class FacilityNetworking : MonoBehaviour
 {
+    public static FacilityNetworking instance;
+
     [SerializeField]
     private Transform otherPlayer;
 
@@ -12,6 +14,8 @@ public class FacilityNetworking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (instance == null)
+            instance = this;
         network = NetworkManager.Singleton;
         if (!Application.isEditor)
         {
@@ -31,6 +35,19 @@ public class FacilityNetworking : MonoBehaviour
     void Update()
     {
         
+    }
+
+    [Rpc(SendTo.Server)]
+    public void DropItem(GameObject obj)
+    {
+        if (obj == null)
+            return;
+        GameObject spawnObject = Instantiate(obj);
+        Destroy(obj);
+        NetworkObject network;
+        if (!obj.TryGetComponent(out network))
+            network = spawnObject.AddComponent<NetworkObject>();
+        network.Spawn(true);
     }
 
     private void HostStart()
