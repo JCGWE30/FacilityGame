@@ -212,7 +212,7 @@ public class InventoryManager : MonoBehaviour
                         droppedItem.transform.position = gameObject.transform.position;
                         dropItem.transform.parent = droppedItem.transform;
                         droppedItem.AddComponent<DroppedItem>();
-                        FacilityNetworking.instance.DropItem(droppedItem);
+                        FacilityNetworking.instance.DropItemRpc(droppedItem);
                     }
                 }
                 else if (hoveredSlot != null)

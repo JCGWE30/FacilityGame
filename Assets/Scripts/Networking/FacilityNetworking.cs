@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class FacilityNetworking : MonoBehaviour
+public class FacilityNetworking : NetworkBehaviour
 {
     public static FacilityNetworking instance;
 
@@ -17,18 +17,25 @@ public class FacilityNetworking : MonoBehaviour
         if (instance == null)
             instance = this;
         network = NetworkManager.Singleton;
-        if (!Application.isEditor)
-        {
-            network.StartHost();
-            HostStart();
-        }
-        else
+#if UNITY_EDITOR
+        if (ParrelSync.ClonesManager.IsClone())
         {
             network.StartClient();
             ClientStart();
         }
+        else
+        {
+            network.StartHost();
+            HostStart();
+        }
+#else
+        network.StartClient();
+        ClientStart();
+#endif
 
-        return;
+        Debug.Log("Host Status: " + network.IsHost);
+        Debug.Log("Client Status: " + network.IsClient);
+        Debug.Log("Server Status: " + network.IsServer);
     }
 
     // Update is called once per frame
@@ -38,16 +45,20 @@ public class FacilityNetworking : MonoBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    public void DropItem(GameObject obj)
+    public void DropItemRpc(GameObject obj)
     {
+        Debug.Log("Processing item");
         if (obj == null)
             return;
         GameObject spawnObject = Instantiate(obj);
         Destroy(obj);
-        NetworkObject network;
-        if (!obj.TryGetComponent(out network))
-            network = spawnObject.AddComponent<NetworkObject>();
-        network.Spawn(true);
+        SpawnDroppedItemRpc(spawnObject);
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void SpawnDroppedItemRpc(GameObject obj)
+    {
+        Debug.Log("Incoming "+obj.name);
     }
 
     private void HostStart()
