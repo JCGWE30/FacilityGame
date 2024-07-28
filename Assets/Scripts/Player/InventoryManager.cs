@@ -169,16 +169,40 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-
     public bool ArmItem(ItemDesc item)
     {
         MovementChecker checker = item.GetComponent<MovementChecker>();
         return checker.TryInsert(equipmentSlots.equipmentContainer.GetEquipmentItem(SlotType.Hand));
     }
 
+    public void Disarm()
+    {
+        ItemSlot item = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
+
+        Debug.Log(item.item);
+
+        Destroy(item.item);
+    }
+
     private ItemSlot SlotToItem(InventorySlot slot)
     {
         return slot.slotManager.container.GetItem(slot.id);
+    }
+
+    private void DropItemOnCursor()
+    {
+        ItemSlot slot = SlotToItem(cursorSlot);
+        //ItemDesc dropItem =
+        //    slot.item.GetComponent<MovementChecker>()
+        //    .TryDrop(SlotToItem(cursorSlot), shifting);
+        PlayerNetworker.localInstance.TryItemDropRpc(slot.item.getIdentifier(), NetworkManager.Singleton.LocalClientId, shifting);
+        //if (dropItem != null)
+        //{
+        //    GameObject droppedItem = new GameObject("DroppedItem");
+        //    droppedItem.transform.position = gameObject.transform.position;
+        //    dropItem.transform.parent = droppedItem.transform;
+        //    droppedItem.AddComponent<DroppedItem>();
+        //}
     }
 
     void Update()
@@ -205,15 +229,7 @@ public class InventoryManager : MonoBehaviour
             {
                 if (!OnInventory())
                 {
-                    ItemDesc dropItem = SlotToItem(cursorSlot).item.GetComponent<MovementChecker>().TryDrop(SlotToItem(cursorSlot), shifting);
-                    if (dropItem != null)
-                    {
-                        GameObject droppedItem = new GameObject("DroppedItem");
-                        droppedItem.transform.position = gameObject.transform.position;
-                        dropItem.transform.parent = droppedItem.transform;
-                        droppedItem.AddComponent<DroppedItem>();
-                        FacilityNetworking.instance.DropItemRpc(droppedItem);
-                    }
+                    DropItemOnCursor();
                 }
                 else if (hoveredSlot != null)
                 {

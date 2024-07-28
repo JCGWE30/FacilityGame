@@ -7850,6 +7850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotCount: 6
+  setInstance: 1
 --- !u!114 &733572274
 MonoBehaviour:
   m_ObjectHideFlags: 0

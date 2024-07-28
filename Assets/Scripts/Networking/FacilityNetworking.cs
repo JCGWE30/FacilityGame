@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class FacilityNetworking : NetworkBehaviour
+public class FacilityNetworking : MonoBehaviour
 {
     public static FacilityNetworking instance;
 
@@ -17,6 +17,7 @@ public class FacilityNetworking : NetworkBehaviour
         if (instance == null)
             instance = this;
         network = NetworkManager.Singleton;
+        Debug.Log("I AM THE NETWORKER YES THAT IS ME");
 #if UNITY_EDITOR
         if (ParrelSync.ClonesManager.IsClone())
         {
@@ -42,23 +43,6 @@ public class FacilityNetworking : NetworkBehaviour
     void Update()
     {
         
-    }
-
-    [Rpc(SendTo.Server)]
-    public void DropItemRpc(GameObject obj)
-    {
-        Debug.Log("Processing item");
-        if (obj == null)
-            return;
-        GameObject spawnObject = Instantiate(obj);
-        Destroy(obj);
-        SpawnDroppedItemRpc(spawnObject);
-    }
-
-    [Rpc(SendTo.NotServer)]
-    public void SpawnDroppedItemRpc(GameObject obj)
-    {
-        Debug.Log("Incoming "+obj.name);
     }
 
     private void HostStart()

@@ -7,8 +7,13 @@ using UnityEngine;
 
 public class PlayerNetworker : NetworkBehaviour
 {
+    public static PlayerNetworker localInstance;
+
     [SerializeField]
     private Transform playerMarker;
+
+    [SerializeField]
+    private GameObject droppedItemPrefab;
 
     private Transform player;
 
@@ -32,8 +37,11 @@ public class PlayerNetworker : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (IsServer)
+            gameObject.AddComponent<EquipmentContainer>();
         if (IsOwner)
         {
+            localInstance = this;
             gameObject.name = "LocalClient";
         }
         else
@@ -67,5 +75,74 @@ public class PlayerNetworker : NetworkBehaviour
             username.text = playerState.Value.name.ToString();
             username.transform.LookAt(Camera.main.transform);
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void TryItemPickupRpc(long id,ulong playerId)
+    {
+        NetworkObject player = NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject;
+        EquipmentContainer equipment = player.GetComponent<EquipmentContainer>();
+        DroppedItem item = EntityIdentifier.fetchObject<DroppedItem>(id);
+        if (item == null)
+        {
+            CancelItemPickupRpc(RpcTarget.Single(playerId, RpcTargetUse.Temp));
+            return;
+        }
+        bool success = item.droppedItem.GetComponent<MovementChecker>().TryInsert(equipment.GetEquipmentItem(SlotType.Hand));
+
+        if (!success)
+        {
+            CancelItemPickupRpc(RpcTarget.Single(playerId, RpcTargetUse.Temp));
+        }
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    public void CancelItemPickupRpc(RpcParams rpcParams)
+    {
+        EquipmentContainer contaner = EquipmentContainer.instance;
+        ItemSlot slot = contaner.GetEquipmentItem(SlotType.Hand);
+        slot.ClearNextItem();
+    }
+
+    
+
+    [Rpc(SendTo.Server)]
+    public void TryItemDropRpc(long id, ulong playerId, bool shifting)
+    {
+        NetworkObject player = NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject;
+        //EquipmentContainer equipment = player.GetComponent<EquipmentContainer>();
+        //StorageContainer containerToSearch = containerId switch
+        //{
+        //    0 => equipment, //Equipment
+        //    1 => equipment.GetEquipmentItem(SlotType.Belt).item?.GetComponent<StorageContainer>(), //Belt
+        //    2 => equipment.GetEquipmentItem(SlotType.Back).item?.GetComponent<StorageContainer>(), //Backpack
+        //    3 => equipment.GetEquipmentItem(SlotType.Vest).item?.GetComponent<StorageContainer>(), //Vest
+        //};
+
+        //if (containerToSearch == null)
+        //    return;
+
+        //ItemSlot slot = containerToSearch.GetItem(slotId);
+        ItemDesc item = EntityIdentifier.fetchInstancedObject<ItemDesc>(id);
+        if (item == null)
+            return;
+        ItemDesc itemToDrop = item.getChecker().TryDrop(item.GetSlot(), shifting);
+        if (itemToDrop != null)
+        {
+            GameObject droppedItem = Instantiate(droppedItemPrefab);
+            droppedItem.transform.position = player.transform.position;
+            itemToDrop.transform.parent = droppedItem.transform;    
+            droppedItem.GetComponent<NetworkObject>().Spawn(true);
+            CompleteDropItemRpc(id, shifting,RpcTarget.Single(playerId, RpcTargetUse.Temp));
+        }
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    public void CompleteDropItemRpc(long id,bool shifting,RpcParams rpcParams)
+    {
+        ItemDesc item = EntityIdentifier.fetchObject<ItemDesc>(id);
+        if (item == null)
+            return;
+        Destroy(item.getChecker().TryDrop(item.GetSlot(), shifting));
     }
 }

@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMarker: {fileID: 2433439531946527569, guid: 63cf4d9b81196e04e807c363344c3ace, type: 3}
+  droppedItemPrefab: {fileID: 3425821358549420236, guid: 483b2b1446b4628489d977c683cc017e, type: 3}
 --- !u!114 &1455327498207793190
 MonoBehaviour:
   m_ObjectHideFlags: 0
