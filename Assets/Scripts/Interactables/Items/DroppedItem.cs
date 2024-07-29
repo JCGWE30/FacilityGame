@@ -2,21 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DroppedItem : Interactable
 {
-    private ItemDesc droppedItem;
+    public ItemDesc droppedItem { get; private set; }
     public LayerMask mask;
     private InventoryManager manager;
     void Start()
     {
+        gameObject.AddComponent<EntityIdentifier>();
         manager = InventoryManager.instance;
         mask = LayerMask.GetMask("Floor");
 
-        droppedItem = gameObject.transform.GetChild(0).gameObject.GetComponent<ItemDesc>();
+        droppedItem = gameObject.GetComponentInChildren<ItemDesc>();
 
         gameObject.layer = 6;
         InfoImage = droppedItem.sprite;
@@ -40,6 +42,14 @@ public class DroppedItem : Interactable
             gameObject.transform.position = hitinfo.point;
         }
     }
+
+    private void Update()
+    {
+        if (transform.childCount==0)
+        {
+            Destroy(gameObject);
+        }
+    }
     protected override void Interact(bool alt)
     {
         if (alt)
@@ -51,8 +61,8 @@ public class DroppedItem : Interactable
         }
         else
         {
-            if (manager.ArmItem(droppedItem))
-                Destroy(gameObject);
+            if(manager.ArmItem(Instantiate(droppedItem)))
+                PlayerNetworker.localInstance.TryItemPickupRpc(GetComponent<EntityIdentifier>().id, NetworkManager.Singleton.LocalClientId);
         }
     }
 }

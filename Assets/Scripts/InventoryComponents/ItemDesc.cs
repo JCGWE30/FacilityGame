@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public enum Slot
@@ -23,10 +24,30 @@ public class ItemDesc : MonoBehaviour
     [SerializeField]
     public string id;
 
+    private void Awake()
+    {
+        gameObject.AddComponent<EntityIdentifier>();
+    }
+
     public bool Match(ItemDesc desc)
     {
         Debug.Log(id);
         Debug.Log(desc.id);
         return desc.id == id;
+    }
+
+    public MovementChecker getChecker()
+    {
+        return GetComponent<MovementChecker>();
+    }
+
+    public long getIdentifier()
+    {
+        return GetComponent<EntityIdentifier>().id;
+    }
+
+    public ItemSlot GetSlot()
+    {
+        return GetComponentInParent<ItemSlot>();
     }
 }

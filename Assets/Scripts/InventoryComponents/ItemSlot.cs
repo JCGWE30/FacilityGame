@@ -8,6 +8,8 @@ public class ItemSlot : MonoBehaviour
     public SlotType slotType;
     public int id { get; private set; }
 
+    private bool clearNext = false;
+
     public void SetId(int id)
     {
         this.id = id;
@@ -16,5 +18,21 @@ public class ItemSlot : MonoBehaviour
     private void Update()
     {
         item = transform.GetComponentInChildren<ItemDesc>();
+        if (item != null && clearNext)
+        {
+            Destroy(item);
+            clearNext = false;
+        }
+        Debug.Log("ok");
+    }
+
+    public void Clear()
+    {
+        Destroy(item);
+    }
+
+    public void ClearNextItem()
+    {
+        clearNext = true;
     }
 }
