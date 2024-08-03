@@ -448,6 +448,7 @@ GameObject:
   m_Component:
   - component: {fileID: 66630399}
   - component: {fileID: 66630398}
+  - component: {fileID: 66630400}
   m_Layer: 0
   m_Name: Wood
   m_TagString: Untagged
@@ -488,6 +489,19 @@ Transform:
   - {fileID: 1716487134}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &66630400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66630397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cc410978053677488a073c01e7bcec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldSerialize: 0
 --- !u!1 &80799043
 GameObject:
   m_ObjectHideFlags: 0
