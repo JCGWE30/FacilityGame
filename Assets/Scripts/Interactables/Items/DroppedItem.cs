@@ -14,7 +14,15 @@ public class DroppedItem : Interactable
     private InventoryManager manager;
     void Start()
     {
-        gameObject.AddComponent<EntityIdentifier>();
+        if (NetworkManager.Singleton.IsServer)
+        {
+            NetworkObject obj;
+            if (TryGetComponent(out obj))
+            {
+                if (!obj.IsSpawned)
+                    obj.Spawn(false);
+            }
+        }
         manager = InventoryManager.instance;
         mask = LayerMask.GetMask("Floor");
 
@@ -42,14 +50,6 @@ public class DroppedItem : Interactable
             gameObject.transform.position = hitinfo.point;
         }
     }
-
-    private void Update()
-    {
-        if (transform.childCount==0)
-        {
-            Destroy(gameObject);
-        }
-    }
     protected override void Interact(bool alt)
     {
         if (alt)
@@ -61,8 +61,17 @@ public class DroppedItem : Interactable
         }
         else
         {
-            if(manager.ArmItem(Instantiate(droppedItem)))
-                PlayerNetworker.localInstance.TryItemPickupRpc(GetComponent<EntityIdentifier>().id, NetworkManager.Singleton.LocalClientId);
+            if (manager.ArmItem(Instantiate(droppedItem)))
+            {
+                ItemSlot handSlot = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
+                MovementOperation operation = new MovementOperation(GetComponent<GlobalIdentifier>().id.Value, handSlot.id, false);
+                operation.OnOperationCanceled += () =>
+                {
+                    handSlot.Clear();
+                };
+                operation.ProcessMove();
+            }
+                //PlayerNetworker.localInstance.TryItemPickupRpc(GetComponent<EntityIdentifier>().id, NetworkManager.Singleton.LocalClientId);
         }
     }
 }

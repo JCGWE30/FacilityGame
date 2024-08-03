@@ -24,11 +24,6 @@ public class ItemDesc : MonoBehaviour
     [SerializeField]
     public string id;
 
-    private void Awake()
-    {
-        gameObject.AddComponent<EntityIdentifier>();
-    }
-
     public bool Match(ItemDesc desc)
     {
         Debug.Log(id);
@@ -39,11 +34,6 @@ public class ItemDesc : MonoBehaviour
     public MovementChecker getChecker()
     {
         return GetComponent<MovementChecker>();
-    }
-
-    public long getIdentifier()
-    {
-        return GetComponent<EntityIdentifier>().id;
     }
 
     public ItemSlot GetSlot()

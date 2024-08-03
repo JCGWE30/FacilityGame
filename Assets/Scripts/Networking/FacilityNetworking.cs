@@ -7,8 +7,7 @@ public class FacilityNetworking : MonoBehaviour
 {
     public static FacilityNetworking instance;
 
-    [SerializeField]
-    private Transform otherPlayer;
+    public DroppedItem droppedItem;
 
     private NetworkManager network;
     // Start is called before the first frame update
@@ -17,7 +16,6 @@ public class FacilityNetworking : MonoBehaviour
         if (instance == null)
             instance = this;
         network = NetworkManager.Singleton;
-        Debug.Log("I AM THE NETWORKER YES THAT IS ME");
 #if UNITY_EDITOR
         if (ParrelSync.ClonesManager.IsClone())
         {

@@ -6,11 +6,11 @@ public class ItemSlot : MonoBehaviour
 {
     public ItemDesc item { get; private set; }
     public SlotType slotType;
-    public int id { get; private set; }
+    public long id { get; private set; }
 
     private bool clearNext = false;
 
-    public void SetId(int id)
+    public void SetId(long id)
     {
         this.id = id;
     }
@@ -23,7 +23,6 @@ public class ItemSlot : MonoBehaviour
             Destroy(item);
             clearNext = false;
         }
-        Debug.Log("ok");
     }
 
     public void Clear()

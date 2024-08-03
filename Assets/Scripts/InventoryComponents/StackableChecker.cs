@@ -96,7 +96,6 @@ public class StackableChecker : MovementChecker
 
     protected override bool GetTryInsert(ItemSlot to)
     {
-        Debug.Log("Try insert called");
         if (to.item == null)
         {
             to.GetComponentInParent<StorageContainer>().SetItem(to.id, GetComponent<ItemDesc>());

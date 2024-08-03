@@ -45,7 +45,7 @@ public abstract class SlotManager : MonoBehaviour
             if (container.slotCount > count)
             {
                 item.gameObject.SetActive(true);
-                item.SetItem(container.GetItem(count).item);
+                item.SetItem(container.GetItems()[count].item);
             }
             else
             {

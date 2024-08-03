@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -15,6 +16,10 @@ public class SlotInfo
 }
 public abstract class StorageContainer : MonoBehaviour
 {
+    public delegate void FinishHandler(List<GameObject> slots);
+
+    public event FinishHandler OnSlotsInitalized;
+
     public int slotCount;
     private GameObject slotHolder;
     private List<SlotManager> managers = new List<SlotManager>();
@@ -32,23 +37,35 @@ public abstract class StorageContainer : MonoBehaviour
             slots.Add(slot);
             slot.transform.parent = slotHolder.transform;
         }
+        OnSlotsInitalized?.Invoke(slots);
     }
     protected virtual void SlotInitalize(int id, ItemSlot slot)
     {
 
     }
+    public ItemSlot GetItemByID(int slot)
+    {
+        return idToSlot(slot);
+    }
     public ItemSlot GetItem(int slot)
     {
-        GameObject obj = slots[slot];
-
-        return obj.GetComponent<ItemSlot>();
+        return slots[slot].GetComponent<ItemSlot>();
     }
     public ItemSlot[] GetItems()
     {
         return GetComponentsInChildren<ItemSlot>();
     }
-    public void SetItem(int slot,ItemDesc item)
+    public void SetItem(long slot,ItemDesc item)
     {
-        item.gameObject.transform.parent = slots[slot].transform;
+        item.gameObject.transform.parent = idToSlot(slot).transform;
+    }
+    private ItemSlot idToSlot(long id) 
+    {
+        foreach(var slot in slots)
+        {
+            if (slot.GetComponent<ItemSlot>().id == id)
+                return slot.GetComponent<ItemSlot>();
+        }
+        return null;
     }
 }

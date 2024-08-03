@@ -8282,7 +8282,6 @@ GameObject:
   - component: {fileID: 782628378}
   - component: {fileID: 782628377}
   - component: {fileID: 782628376}
-  - component: {fileID: 782628380}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -8302,7 +8301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2716f3beffcba4d4ba85f9b3cec67eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherPlayer: {fileID: 8922430581595849361, guid: f4811e4308b689e4dba8afb5dceafb80, type: 3}
+  droppedItem: {fileID: 5568310923532959972, guid: 483b2b1446b4628489d977c683cc017e, type: 3}
 --- !u!114 &782628377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8382,18 +8381,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &782628380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782628375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c492dbdff7247745ac91bc8d2e980bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &782635300
 PrefabInstance:
   m_ObjectHideFlags: 0
