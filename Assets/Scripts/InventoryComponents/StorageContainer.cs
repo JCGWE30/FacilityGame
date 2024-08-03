@@ -14,19 +14,27 @@ public class SlotInfo
         this.slot = slot;
     }
 }
+
 public abstract class StorageContainer : MonoBehaviour
 {
     public delegate void FinishHandler(List<GameObject> slots);
 
     public event FinishHandler OnSlotsInitalized;
-
     public int slotCount;
     private GameObject slotHolder;
-    private List<SlotManager> managers = new List<SlotManager>();
     private List<GameObject> slots = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
+        if (transform.Find("Inventory"))
+        {
+            foreach(Transform child in transform.Find("Inventory"))
+            {
+                slots.Add(child.gameObject);
+            }
+            slotCount = slots.Count;
+            return;
+        }
         slotHolder = new GameObject("Inventory");
         slotHolder.transform.parent = transform;
         for (int i = 0; i < slotCount; i++)
