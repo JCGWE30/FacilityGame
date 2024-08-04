@@ -133,7 +133,7 @@ public class InventoryManager : MonoBehaviour
                 continue;
             foreach (var item in slotm.container.GetItems())
             {
-                if (slot.item.GetComponent<MovementChecker>().TryMove(slot, item, false))
+                if (MoveItem(slot,item,false))
                     return;
             }
         }
@@ -178,9 +178,6 @@ public class InventoryManager : MonoBehaviour
     public void Disarm()
     {
         ItemSlot item = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
-
-        Debug.Log(item.item);
-
         Destroy(item.item);
     }
 
@@ -192,10 +189,20 @@ public class InventoryManager : MonoBehaviour
     private void DropItemOnCursor()
     {
         ItemSlot slot = SlotToItem(cursorSlot);
+        MovementOperation operation = new MovementOperation(OperationType.Drop, slot.id, 0, shifting); // Destination ID on drops do not matter
+        operation.OnOperationFail += () =>
+        {
+            slot.Clear();
+        };
+        operation.OnOperationSuccess += () =>
+        {
+            Destroy(slot.item.getChecker().TryDrop(slot, shifting));
+        };
+        operation.ProcessMove();
         //ItemDesc dropItem =
         //    slot.item.GetComponent<MovementChecker>()
         //    .TryDrop(SlotToItem(cursorSlot), shifting);
-        PlayerNetworker.localInstance.TryItemDropRpc(slot.item.getIdentifier(), NetworkManager.Singleton.LocalClientId, shifting);
+        //PlayerNetworker.localInstance.TryItemDropRpc(slot.item.getIdentifier(), NetworkManager.Singleton.LocalClientId, shifting);
         //if (dropItem != null)
         //{
         //    GameObject droppedItem = new GameObject("DroppedItem");
@@ -203,6 +210,25 @@ public class InventoryManager : MonoBehaviour
         //    dropItem.transform.parent = droppedItem.transform;
         //    droppedItem.AddComponent<DroppedItem>();
         //}
+    }
+
+    private bool MoveItem(ItemSlot source, ItemSlot destination,bool shifting)
+    {
+        if (source.item.getChecker().CanMove(source, destination, shifting))
+        {
+            MovementOperation operation = new MovementOperation(OperationType.Move, source.id, destination.id, shifting);
+            operation.OnOperationSuccess += () =>
+            {
+                source.item.getChecker().TryMove(source, destination, shifting);
+            };
+            operation.OnOperationFail += () =>
+            {
+               source.Clear();
+            };
+            operation.ProcessMove();
+            return true;
+        }
+        return false;
     }
 
     void Update()
@@ -233,8 +259,7 @@ public class InventoryManager : MonoBehaviour
                 }
                 else if (hoveredSlot != null)
                 {
-                    hoveredSlot.isHovered = false;
-                    SlotToItem(cursorSlot).item.GetComponent<MovementChecker>().TryMove(SlotToItem(cursorSlot), SlotToItem(hoveredSlot), shifting);
+                    MoveItem(SlotToItem(cursorSlot), SlotToItem(hoveredSlot), shifting);
                 }
                 cursorSlot = null;
             }

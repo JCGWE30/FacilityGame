@@ -4,20 +4,22 @@ using System.Runtime.Serialization;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public struct SerializedComponent : INetworkSerializable
 {
-    public INetworkSerializable data;
+    public SerializedValue[] data;
     public string componentName;
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        data.NetworkSerialize(serializer);
+        serializer.SerializeValue(ref data);
         serializer.SerializeValue(ref componentName);
     }
 }
 public struct SerializedGameObject : INetworkSerializable
 {
+
     public string name;
     public FixedString128Bytes itemId;
     public SerializedComponent[] components;
@@ -44,7 +46,7 @@ public class ItemSerializer
                 continue;
             components.Add(new SerializedComponent
             {
-                data = (component as ISerializableComponent).SerializeComponent(),
+                data = (component as ISerializableComponent).SerializeComponent().values.ToArray(),
                 componentName = component.GetType().AssemblyQualifiedName
             });
         }
@@ -62,7 +64,6 @@ public class ItemSerializer
             children = children.ToArray()
         };
     }
-
     public static GameObject deserializeGameObject(SerializedGameObject serializedObject)
     {
         GameObject newObject;
@@ -79,7 +80,7 @@ public class ItemSerializer
         {
             System.Type componentType = System.Type.GetType($"{component.componentName},Assembly-CSharp");
             ISerializableComponent newComponent = newObject.AddComponent(componentType) as ISerializableComponent;
-            newComponent.DeserializeComponent(component.data);
+            newComponent.DeserializeComponent(new ComponentValues(component.data));
         }
         foreach(SerializedGameObject child in serializedObject.children)
         {

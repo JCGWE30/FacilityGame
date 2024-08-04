@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public struct ItemSlotData : INetworkSerializable
-{
-    public int id;
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    {
-        serializer.SerializeValue(ref id);
-    }
-}
 public class ItemSlot : MonoBehaviour,ISerializableComponent
 {
     public ItemDesc item { get; private set; }
     public SlotType slotType;
-    public int id { get; private set; }
+    public long id;
 
     private bool clearNext = false;
 
-    public void SetId(int id)
+    public void SetId(long id)
     {
         this.id = id;
     }
@@ -32,7 +24,6 @@ public class ItemSlot : MonoBehaviour,ISerializableComponent
             Destroy(item);
             clearNext = false;
         }
-        Debug.Log("ok");
     }
 
     public void Clear()
@@ -45,20 +36,15 @@ public class ItemSlot : MonoBehaviour,ISerializableComponent
         clearNext = true;
     }
 
-    public INetworkSerializable SerializeComponent()
+    public ComponentValues SerializeComponent()
     {
-        return new ItemSlotData
-        {
-            id = id
-        };
+        return new ComponentValues()
+            .AddValue("id", id);
     }
 
-    public void DeserializeComponent(INetworkSerializable serializedComponent)
+    public void DeserializeComponent(ComponentValues serializedComponent)
     {
-        ItemSlotData? data = serializedComponent as ItemSlotData?;
-        if (data.HasValue)
-        {
-            id = data.Value.id;
-        }
+        serializedComponent
+            .GetValue("id", ref id);
     }
 }

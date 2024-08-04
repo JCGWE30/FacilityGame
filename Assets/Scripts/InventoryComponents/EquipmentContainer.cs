@@ -70,17 +70,17 @@ public class EquipmentContainer : StorageContainer
         switch (type)
         {
             case SlotType.Hand:
-                return GetItem(0);
+                return GetItems()[0];
             case SlotType.Belt:
-                return GetItem(1);
+                return GetItems()[1];
             case SlotType.Back:
-                return GetItem(2);
+                return GetItems()[2];
             case SlotType.Uniform:
-                return GetItem(3);
+                return GetItems()[3];
             case SlotType.Vest:
-                return GetItem(4);
+                return GetItems()[4];
             case SlotType.Helmet:
-                return GetItem(5);
+                return GetItems()[5];
         }
         return null;
     }

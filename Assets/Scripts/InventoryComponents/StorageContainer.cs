@@ -17,7 +17,10 @@ public class SlotInfo
 
 public abstract class StorageContainer : MonoBehaviour
 {
-    private bool initalized;
+    public delegate void FinishHandler(List<GameObject> slots);
+
+    public event FinishHandler OnSlotsInitalized;
+
     public int slotCount;
     private GameObject slotHolder;
     private List<GameObject> slots = new List<GameObject>();
@@ -33,7 +36,6 @@ public abstract class StorageContainer : MonoBehaviour
             slotCount = slots.Count;
             return;
         }
-        initalized = true;
         slotHolder = new GameObject("Inventory");
         slotHolder.transform.parent = transform;
         for (int i = 0; i < slotCount; i++)
@@ -44,23 +46,35 @@ public abstract class StorageContainer : MonoBehaviour
             slots.Add(slot);
             slot.transform.parent = slotHolder.transform;
         }
+        OnSlotsInitalized?.Invoke(slots);
     }
     protected virtual void SlotInitalize(int id, ItemSlot slot)
     {
 
     }
+    public ItemSlot GetItemByID(int slot)
+    {
+        return idToSlot(slot);
+    }
     public ItemSlot GetItem(int slot)
     {
-        GameObject obj = slots[slot];
-
-        return obj.GetComponent<ItemSlot>();
+        return slots[slot].GetComponent<ItemSlot>();
     }
     public ItemSlot[] GetItems()
     {
         return GetComponentsInChildren<ItemSlot>();
     }
-    public void SetItem(int slot,ItemDesc item)
+    public void SetItem(long slot,ItemDesc item)
     {
-        item.gameObject.transform.parent = slots[slot].transform;
+        item.gameObject.transform.parent = idToSlot(slot).transform;
+    }
+    private ItemSlot idToSlot(long id) 
+    {
+        foreach(var slot in slots)
+        {
+            if (slot.GetComponent<ItemSlot>().id == id)
+                return slot.GetComponent<ItemSlot>();
+        }
+        return null;
     }
 }

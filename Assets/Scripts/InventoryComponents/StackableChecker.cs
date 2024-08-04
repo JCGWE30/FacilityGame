@@ -3,18 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
-public struct StackableCheckerData : INetworkSerializable
-{
-    public int amount;
-    public int maxStackSize;
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    {
-        serializer.SerializeValue(ref amount);
-        serializer.SerializeValue(ref maxStackSize);
-    }
-}
-
 public class StackableChecker : MovementChecker, ISerializableComponent
 {
     public int amount;
@@ -108,7 +96,6 @@ public class StackableChecker : MovementChecker, ISerializableComponent
 
     protected override bool GetTryInsert(ItemSlot to)
     {
-        Debug.Log("Try insert called");
         if (to.item == null)
         {
             to.GetComponentInParent<StorageContainer>().SetItem(to.id, GetComponent<ItemDesc>());
@@ -138,22 +125,17 @@ public class StackableChecker : MovementChecker, ISerializableComponent
         }
     }
 
-    public INetworkSerializable SerializeComponent()
+    public ComponentValues SerializeComponent()
     {
-        return new StackableCheckerData
-        {
-            amount = amount,
-            maxStackSize = maxStackSize
-        };
+        return new ComponentValues()
+            .AddValue("amount", amount)
+            .AddValue("maxStack", maxStackSize);
     }
 
-    public void DeserializeComponent(INetworkSerializable serializedComponent)
+    public void DeserializeComponent(ComponentValues serializedComponent)
     {
-        StackableCheckerData? data = serializedComponent as StackableCheckerData?;
-        if (data.HasValue)
-        {
-            amount = data.Value.amount;
-            maxStackSize = data.Value.maxStackSize;
-        }
+        serializedComponent
+            .GetValue("amount", ref amount)
+            .GetValue("maxStack", ref maxStackSize);
     }
 }
