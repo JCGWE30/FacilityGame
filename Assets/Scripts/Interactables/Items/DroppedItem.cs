@@ -20,14 +20,39 @@ public class DroppedItem : Interactable
             if (TryGetComponent(out obj))
             {
                 if (!obj.IsSpawned)
-                    obj.Spawn(false);
+                    obj.Spawn(true);
             }
         }
         manager = InventoryManager.instance;
         mask = LayerMask.GetMask("Floor");
 
         droppedItem = gameObject.GetComponentInChildren<ItemDesc>();
+        if (droppedItem == null)
+        {
+            GlobalIdentifier gid = GetComponent<GlobalIdentifier>();
+            gid.id.OnValueChanged = (long pval, long nval) =>
+            {
+                Debug.Log("value changed making changes");
+                var dd = OperationNetworker.instance.queuedItems;
 
+                foreach (var item in OperationNetworker.instance.queuedItems)
+                {
+                    if (item.id == nval)
+                    {
+                        GameObject newItem = item.item;
+                        Debug.Log("item located");
+                        newItem.transform.parent = transform;
+                        droppedItem = newItem.GetComponent<ItemDesc>();
+                        initDroppedItem();
+                    }
+                }
+            };
+            return;
+        }
+        initDroppedItem();
+    }
+    private void initDroppedItem()
+    {
         gameObject.layer = 6;
         InfoImage = droppedItem.sprite;
         InfoText = "Pickup " + droppedItem.displayName;
@@ -44,7 +69,7 @@ public class DroppedItem : Interactable
 
         Ray ray = new Ray(gameObject.transform.position, Vector2.down);
         RaycastHit hitinfo;
-         
+
         if (Physics.Raycast(ray, out hitinfo, 30f, mask))
         {
             gameObject.transform.position = hitinfo.point;

@@ -17,7 +17,7 @@ public class FacilityNetworking : MonoBehaviour
             instance = this;
         network = NetworkManager.Singleton;
 #if UNITY_EDITOR
-        if (ParrelSync.ClonesManager.IsClone())
+        if (!ParrelSync.ClonesManager.IsClone())
         {
             network.StartClient();
             ClientStart();

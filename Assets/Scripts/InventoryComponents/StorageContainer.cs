@@ -20,6 +20,7 @@ public abstract class StorageContainer : MonoBehaviour
     public delegate void FinishHandler(List<GameObject> slots);
 
     public event FinishHandler OnSlotsInitalized;
+
     public int slotCount;
     private GameObject slotHolder;
     private List<GameObject> slots = new List<GameObject>();

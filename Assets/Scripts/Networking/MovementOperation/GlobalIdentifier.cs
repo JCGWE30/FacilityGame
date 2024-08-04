@@ -30,7 +30,7 @@ public class GlobalIdentifier : NetworkBehaviour
         long id = lastId;
         lastId++;
 
-        GlobalIdentifier slot = obj.AddComponent<GlobalIdentifier>();
+        GlobalIdentifier slot = obj.GetOrAddComponent<GlobalIdentifier>();
         slot.id.Value = id;
         slot.isSet = true;
         return id;
@@ -40,6 +40,7 @@ public class GlobalIdentifier : NetworkBehaviour
     {
         foreach(GlobalIdentifier gid in FindObjectsOfType<GlobalIdentifier>())
         {
+            Debug.Log($"{gid.gameObject} has id of {gid.id.Value}");
             if (gid.id.Value == id)
                 return gid.GetComponent<T>();
         }
