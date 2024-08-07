@@ -11,9 +11,9 @@ public class Interactable : MonoBehaviour
     public Sprite infoImage { get; private set; }
     public string infoText { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
-        //Set layer to interactable
+        gameObject.layer = 6;
     }
 
     public void Call()
