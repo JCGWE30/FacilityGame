@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyLogUI : MonoBehaviour, IBaseInitalizer
+public class DailyLogUI : MonoBehaviour
 {
     public static DailyLogUI instance;
 
@@ -17,7 +17,7 @@ public class DailyLogUI : MonoBehaviour, IBaseInitalizer
     private TMP_Text commitText;
     private Button commitButton;
 
-    public void Initalize()
+    public void Awake()
     {
         if (instance == null)
             instance = this;

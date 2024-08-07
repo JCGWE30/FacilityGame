@@ -45,24 +45,7 @@ public class CommandManager : MonoBehaviour
 
     private void ExecuteCommand(string command, string[] args)
     {
-        //ItemHolder holder = GetComponent<ItemHolder>();
-        switch (command){
-            case "spawncrate":
-
-            case "giveitem":
-                break;
-            case "spawnitem":
-                //InventoryItem item = holder.getFromId(args[0]);
-                GameObject obj = new GameObject("DroppedItem");
-                obj.transform.position = player.position;
-                DroppedItem dropped = obj.AddComponent<DroppedItem>();
-                //dropped.droppedItem = item;
-                dropped.mask = floormask;
-                break;
-            case "startsighting":
-                Sighting.getSighting().StartSighting(60);
-                break;
-        }
+        
     }
 
     public void ExitCommand()

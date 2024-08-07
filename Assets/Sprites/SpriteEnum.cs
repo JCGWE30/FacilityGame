@@ -1,0 +1,28 @@
+public enum SpriteEnum
+{
+    BackSlot,
+    BeltSlot,
+    DropItem,
+    EmptySlot,
+    HandSlot,
+    HelmetSlot,
+    ItemSlot,
+    UniformSlot,
+    VestSlot,
+    WeaponSlot,
+    AdminIDItem,
+    AnomolusMaterialItem,
+    BaseBeltItem,
+    IDItem,
+    IronItem,
+    ItemCrateItem,
+    PlasticItem,
+    PointDiskItem,
+    TechDiskItem,
+    WoodItem,
+    ArrowIcon,
+    FabricationIcon,
+    IDChipIcon,
+    ResearchBackground,
+    TFAIcon
+}

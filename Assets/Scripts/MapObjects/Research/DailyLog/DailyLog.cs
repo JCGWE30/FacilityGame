@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DailyLog : Interactable, IBaseInitalizer
+public class DailyLog : Interactable
 {
     public static DailyLog instance;
 

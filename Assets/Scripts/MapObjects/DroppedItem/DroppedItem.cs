@@ -94,7 +94,6 @@ public class DroppedItem : Interactable
                 };
                 operation.ProcessMove();
             }
-                //PlayerNetworker.localInstance.TryItemPickupRpc(GetComponent<EntityIdentifier>().id, NetworkManager.Singleton.LocalClientId);
         }
     }
 }

@@ -28,8 +28,14 @@ public class ItemDesc : MonoBehaviour
     public string displayName;
     public GameObject worldModel;
     public GameObject viewModel;
-    public Sprite sprite;
+    public string spriteName;
+    public Sprite sprite { get; private set; }
     public Slot itemType;
+
+    private void Start()
+    {
+        sprite = SpriteFinder.GetSprite(spriteName);
+    }
 
     public bool Match(ItemDesc desc)
     {
@@ -39,5 +45,9 @@ public class ItemDesc : MonoBehaviour
     public ItemSlot GetSlot()
     {
         return GetComponentInParent<ItemSlot>();
+    }
+    public void SetSprite(Sprite sprite)
+    {
+        this.sprite = sprite;
     }
 }

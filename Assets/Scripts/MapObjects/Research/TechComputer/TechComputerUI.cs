@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TechComputerUI : MonoBehaviour, IBaseInitalizer
+public class TechComputerUI : MonoBehaviour
 {
     public static TechComputerUI instance;
 
@@ -35,7 +35,7 @@ public class TechComputerUI : MonoBehaviour, IBaseInitalizer
     private Button researchInfoButton;
 
     private ResearchTech selectedTech;
-    public void Initalize()
+    public void Awake()
     {
         if (instance == null)
             instance = this;
