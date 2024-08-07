@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TechComputer : Interactable
+public class TechComputer : MonoBehaviour
 {
     public static TechComputer instance;
 
@@ -16,6 +16,12 @@ public class TechComputer : Interactable
     {
         if (instance == null)
             instance = this;
+    }
+
+    private void Start()
+    {
+        GetComponent<Interactable>().Setup(SpriteEnum.ResearchBackground, "Open Tech Computer")
+            .OnInteract += Interact;
     }
 
     public void StartResearching(ResearchTech tech)
@@ -53,7 +59,7 @@ public class TechComputer : Interactable
         }
     }
 
-    protected override void Interact(bool alt)
+    private void Interact()
     {
         TechComputerUI.instance.Open();
     }

@@ -21,7 +21,7 @@ public class InteractionManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = GetComponent<PlayerLook>().cam;
+        cam = Camera.main;
         inputManager = GetComponent<InputManager>();
         interactText.gameObject.SetActive(false);
         interactImage.gameObject.SetActive(false);
@@ -39,8 +39,8 @@ public class InteractionManager : MonoBehaviour
         {
             interactText.gameObject.SetActive(true);
             interactImage.gameObject.SetActive(true);
-            interactText.text = interact.InfoText;
-            interactImage.sprite = interact.InfoImage;
+            interactText.text = interact.infoText;
+            interactImage.sprite = interact.infoImage;
             infoActive = true;
         }
     }
@@ -64,7 +64,7 @@ public class InteractionManager : MonoBehaviour
                 InteractableInfo(interactable);
                 if (inputManager.onFoot.Interact.triggered)
                 {
-                    interactable.BaseInteract(inputManager.onFoot.AltHeld.IsPressed());
+                    interactable.Call();
                 }
             }
             else

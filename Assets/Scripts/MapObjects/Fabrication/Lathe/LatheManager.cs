@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class LatheManager : Interactable
+public class LatheManager : MonoBehaviour
 {
     private int maxResource = 100;
     private GameObject panel;
@@ -14,6 +14,8 @@ public class LatheManager : Interactable
     private void Start()
     {
         panel = GameObject.Find("/HUD/LatheMenu");
+        GetComponent<Interactable>().Setup(SpriteEnum.FabricationIcon, "Open Lathe")
+            .OnInteract += Interact;
     }
 
     public int iron { get; private set; } = 0;
@@ -61,9 +63,9 @@ public class LatheManager : Interactable
         item.transform.parent = slot.transform;
     }
 
-    protected override void Interact(bool alt)
+    private void Interact()
     {
-        if (alt)
+        if (InputManager.instance.onFoot.AltHeld.IsPressed())
         {
             ItemSlot item = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
             if (item.item != null)

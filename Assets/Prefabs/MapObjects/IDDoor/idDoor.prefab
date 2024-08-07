@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4430804318732675216}
   - component: {fileID: 6998001760171150048}
   - component: {fileID: 5380734434553840600}
+  - component: {fileID: 2760712478693022828}
   m_Layer: 6
   m_Name: Keypad
   m_TagString: Untagged
@@ -118,11 +119,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec941ef79ddee1f4db82bc7d3e2c1121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InfoImage: {fileID: 21300000, guid: dc865ad09c9a3144aa94320776837273, type: 3}
-  InfoText: 
   doorName: Test Door
   accessneeded: 0
   door: {fileID: 3018697082408551767}
+--- !u!114 &2760712478693022828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032884566597731409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f03e6dede2ee343b253f10265cfea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infoImage: {fileID: 0}
+  infoText: 
 --- !u!1 &3018697082408551767
 GameObject:
   m_ObjectHideFlags: 0

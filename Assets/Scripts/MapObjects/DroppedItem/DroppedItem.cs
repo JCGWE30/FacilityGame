@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DroppedItem : Interactable
+public class DroppedItem : MonoBehaviour
 {
     public ItemDesc droppedItem { get; private set; }
     public LayerMask mask;
@@ -52,8 +52,8 @@ public class DroppedItem : Interactable
     private void initDroppedItem()
     {
         gameObject.layer = 6;
-        InfoImage = droppedItem.sprite;
-        InfoText = "Pickup " + droppedItem.displayName;
+        GetComponent<Interactable>().Setup(droppedItem.sprite, droppedItem.displayName)
+            .OnInteract += Interact;
 
         gameObject.transform.localScale = droppedItem.worldModel.transform.lossyScale;
         gameObject.transform.rotation = droppedItem.worldModel.transform.rotation;
@@ -73,9 +73,9 @@ public class DroppedItem : Interactable
             gameObject.transform.position = hitinfo.point;
         }
     }
-    protected override void Interact(bool alt)
+    private void Interact()
     {
-        if (alt)
+        if (InputManager.instance.onFoot.AltHeld.IsPressed())
         {
             StorageContainer itemContainer;
             if (!droppedItem.TryGetComponent(out itemContainer))
