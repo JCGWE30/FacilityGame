@@ -58,7 +58,6 @@ public class ResearchTable : Interactable
             {
                 float checknumber = (float) selectedTest.successRate/100;
                 float val = Random.value;
-                Debug.Log(checknumber + " VALS " + val);
                 if (checknumber >= val)
                 {
                     testState = 2;
@@ -79,7 +78,7 @@ public class ResearchTable : Interactable
     {
         if (testState == 2)
         {
-            if (printedDisk.GetComponent<MovementChecker>().TryInsert(EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand)))
+            if (printedDisk.desc.checker.TryInsert(EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand)))
             {
                 testState = 0;
                 selectedTest = null;

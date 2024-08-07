@@ -32,7 +32,6 @@ public class DroppedItem : Interactable
             GlobalIdentifier gid = GetComponent<GlobalIdentifier>();
             gid.id.OnValueChanged = (long pval, long nval) =>
             {
-                Debug.Log("value changed making changes");
                 var dd = OperationNetworker.instance.queuedItems;
 
                 foreach (var item in OperationNetworker.instance.queuedItems)
@@ -40,7 +39,6 @@ public class DroppedItem : Interactable
                     if (item.id == nval)
                     {
                         GameObject newItem = item.item;
-                        Debug.Log("item located");
                         newItem.transform.parent = transform;
                         droppedItem = newItem.GetComponent<ItemDesc>();
                         initDroppedItem();

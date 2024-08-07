@@ -124,7 +124,7 @@ public class TechComputerUI : MonoBehaviour, IBaseInitalizer
     {
         if (TechComputer.instance.computerState == 2)
         {
-            if (TechComputer.instance.claimableDisk.GetComponent<MovementChecker>().TryInsert(EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand)))
+            if (TechComputer.instance.claimableDisk.checker.TryInsert(EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand)))
                 TechComputer.instance.ClearDisk();
         }
     }

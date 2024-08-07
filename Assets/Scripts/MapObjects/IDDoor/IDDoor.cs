@@ -33,7 +33,7 @@ public class IDDoor : Interactable
         IDCardHandler keycard;
         if (!handSlot.item.TryGetComponent(out keycard))
             return;
-        if (keycard.hasAccess(accessneeded))
+        if (keycard.HasAccess(accessneeded))
         {
             open = true;
             door.GetComponent<Animator>().SetBool("isOpen", true);

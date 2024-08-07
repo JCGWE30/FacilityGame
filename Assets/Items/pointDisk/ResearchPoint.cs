@@ -7,7 +7,7 @@ public class ResearchPoint : MonoBehaviour
     public int pointValue;
     public string testName;
 
-    private ItemDesc desc;
+    public ItemDesc desc { get; private set; }
 
     void Start()
     {

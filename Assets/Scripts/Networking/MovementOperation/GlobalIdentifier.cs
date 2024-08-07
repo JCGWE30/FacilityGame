@@ -40,7 +40,6 @@ public class GlobalIdentifier : NetworkBehaviour
     {
         foreach(GlobalIdentifier gid in FindObjectsOfType<GlobalIdentifier>())
         {
-            Debug.Log($"{gid.gameObject} has id of {gid.id.Value}");
             if (gid.id.Value == id)
                 return gid.GetComponent<T>();
         }

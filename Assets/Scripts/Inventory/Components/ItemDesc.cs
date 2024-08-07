@@ -17,24 +17,23 @@ public enum Slot
 }
 public class ItemDesc : MonoBehaviour
 {
+    [SerializeField]
+    public string id;
+
+    public MovementChecker checker { get 
+        {
+            return GetComponent<MovementChecker>();
+        } }
+
     public string displayName;
     public GameObject worldModel;
     public GameObject viewModel;
     public Sprite sprite;
     public Slot itemType;
-    [SerializeField]
-    public string id;
 
     public bool Match(ItemDesc desc)
     {
-        Debug.Log(id);
-        Debug.Log(desc.id);
         return desc.id == id;
-    }
-
-    public MovementChecker getChecker()
-    {
-        return GetComponent<MovementChecker>();
     }
 
     public ItemSlot GetSlot()

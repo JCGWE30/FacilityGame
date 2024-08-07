@@ -19,7 +19,7 @@ public class IDCardHandler : MonoBehaviour
 
     public AccessPreset preset;
     public bool testAccess;
-    public bool hasAccess(Access access)
+    public bool HasAccess(Access access)
     {
         switch (access)
         {

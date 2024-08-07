@@ -66,7 +66,6 @@ public class LatheManager : Interactable
         if (alt)
         {
             ItemSlot item = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
-            Debug.Log(item);
             if (item.item != null)
             {
                 switch (item.item.id)

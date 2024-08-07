@@ -54,7 +54,7 @@ public abstract class StorageContainer : MonoBehaviour
     }
     public ItemSlot GetItemByID(int slot)
     {
-        return idToSlot(slot);
+        return IdToSlot(slot);
     }
     public ItemSlot GetItem(int slot)
     {
@@ -66,9 +66,9 @@ public abstract class StorageContainer : MonoBehaviour
     }
     public void SetItem(long slot,ItemDesc item)
     {
-        item.gameObject.transform.parent = idToSlot(slot).transform;
+        item.gameObject.transform.parent = IdToSlot(slot).transform;
     }
-    private ItemSlot idToSlot(long id) 
+    private ItemSlot IdToSlot(long id) 
     {
         foreach(var slot in slots)
         {

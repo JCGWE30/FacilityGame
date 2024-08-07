@@ -31,10 +31,6 @@ public class FacilityNetworking : MonoBehaviour
         network.StartClient();
         ClientStart();
 #endif
-
-        Debug.Log("Host Status: " + network.IsHost);
-        Debug.Log("Client Status: " + network.IsClient);
-        Debug.Log("Server Status: " + network.IsServer);
     }
 
     // Update is called once per frame
@@ -60,7 +56,7 @@ public class FacilityNetworking : MonoBehaviour
         network.OnClientConnectedCallback += ConnectPlayer;
         network.OnClientDisconnectCallback += (obj) =>
         {
-            Debug.Log(obj + " has Disconnected");
+            Debug.Log(obj + " has Disconnected"); //ND
         };
     }
 
@@ -70,6 +66,6 @@ public class FacilityNetworking : MonoBehaviour
         {
             name = "potatoes"
         };
-        Debug.Log(id + " has Connected");
+        Debug.Log(id + " has Connected"); //ND
     }
 }

@@ -31,7 +31,6 @@ public class OperationNetworker : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SendMovementOperationRpc(MovementOperation.MovementOperationData data)
     {
-        Debug.Log($"Processing Movement Operation {data.operationId}, {data.type}, {data.sourceId}, {data.destinationId}");
         if (GlobalIdentifier.FetchObject(data.sourceId)?.transform.childCount == 0)
         {
             SendResults(OperationResult.Failure, data.operationId);
@@ -47,7 +46,7 @@ public class OperationNetworker : NetworkBehaviour
             case OperationType.Pickup:
                 sourceItem = GlobalIdentifier.FetchObject<DroppedItem>(data.sourceId);
                 destination = GlobalIdentifier.FetchObject<ItemSlot>(data.destinationId);
-                success = sourceItem.droppedItem. getChecker().TryInsert(destination);
+                success = sourceItem.droppedItem.checker.TryInsert(destination);
                 if (success)
                 {
                     Destroy(sourceItem.gameObject);
@@ -57,12 +56,12 @@ public class OperationNetworker : NetworkBehaviour
             case OperationType.Move:
                 source = GlobalIdentifier.FetchObject<ItemSlot>(data.sourceId);
                 destination = GlobalIdentifier.FetchObject<ItemSlot>(data.destinationId);
-                success = source.item.getChecker().TryMove(source, destination, data.shifting);
+                success = source.item.checker.TryMove(source, destination, data.shifting);
                 SendResults(success ? OperationResult.Success : OperationResult.Cancelled, data.operationId);
                 break;
             case OperationType.Drop:
                 source = GlobalIdentifier.FetchObject<ItemSlot>(data.sourceId);
-                ItemDesc dropItem = source.item.getChecker().TryDrop(source, data.shifting);
+                ItemDesc dropItem = source.item.checker.TryDrop(source, data.shifting);
                 success = dropItem != null;
                 if (success)
                 {
@@ -97,13 +96,11 @@ public class OperationNetworker : NetworkBehaviour
     [Rpc(SendTo.NotServer)]
     public void SpawnDroppedItemRpc(long id,SerializedGameObject serializedObject)
     {
-        Debug.Log("Recieving spawn RPC");
         DroppedItem droppedItem = GlobalIdentifier.FetchObject<DroppedItem>(id);
         GameObject item = ItemSerializer.deserializeGameObject(serializedObject);
         if (droppedItem == null)
         {
             instance.queuedItems.Add(new QueuedItem { item = item, id=id});
-            Debug.Log("Failed to fetch added to queue");
             return;
         }
         item.transform.parent = droppedItem.transform;
