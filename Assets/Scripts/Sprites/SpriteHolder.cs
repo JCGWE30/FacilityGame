@@ -1,16 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/SpriteHolder")]
+[CreateAssetMenu(menuName = "ScriptableObjects/ItemHolderObject")]
 public class SpriteHolder : ScriptableObject
 {
-    public Sprite Back;
-    public Sprite Belt;
-    public Sprite Drop;
-    public Sprite Hand;
-    public Sprite Helmet;
-    public Sprite Item;
-    public Sprite None;
-    public Sprite Uniform;
-    public Sprite Vest;
-    public Sprite Weapon;
+    public Sprite[] sprites;
 }

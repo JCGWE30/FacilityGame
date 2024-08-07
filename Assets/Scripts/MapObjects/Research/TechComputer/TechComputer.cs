@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TechComputer : Interactable, IBaseInitalizer
+public class TechComputer : Interactable
 {
     public static TechComputer instance;
 
@@ -12,7 +12,7 @@ public class TechComputer : Interactable, IBaseInitalizer
     public int computerState { get; private set; } = 0;
     public float startTime { get; private set; }
     private ResearchTech selectedTech;
-    public void Initalize()
+    public void Awake()
     {
         if (instance == null)
             instance = this;

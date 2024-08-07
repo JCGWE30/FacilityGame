@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResearchTableUI : MonoBehaviour, IBaseInitalizer
+public class ResearchTableUI : MonoBehaviour
 {
     public static ResearchTableUI instance;
 
@@ -35,7 +35,7 @@ public class ResearchTableUI : MonoBehaviour, IBaseInitalizer
     public ResearchTableUI()
     {
     }
-    public void Initalize()
+    public void Awake()
     {
         if (instance == null)
             instance = this;

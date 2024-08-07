@@ -18,7 +18,7 @@ public class ResearchTech
         this.tier = tier;
     }
 }
-public class ResearchServer : MonoBehaviour, IBaseInitalizer
+public class ResearchServer : MonoBehaviour
 {
     private List<ResearchTech> researchTech = new List<ResearchTech>();
     private List<ResearchTech> fabricationTech = new List<ResearchTech>();
@@ -34,7 +34,7 @@ public class ResearchServer : MonoBehaviour, IBaseInitalizer
 
     private float lastProcess;
     public int researchPoints { get; private set; }
-    public void Initalize()
+    public void Awake()
     {
         if (instance == null)
             instance = this;
