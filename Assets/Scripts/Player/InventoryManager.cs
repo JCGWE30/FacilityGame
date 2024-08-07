@@ -171,7 +171,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool ArmItem(ItemDesc item)
     {
-        MovementChecker checker = item.GetComponent<MovementChecker>();
+        MovementChecker checker = item.checker;
         return checker.TryInsert(equipmentSlots.equipmentContainer.GetEquipmentItem(SlotType.Hand));
     }
 
@@ -196,30 +196,19 @@ public class InventoryManager : MonoBehaviour
         };
         operation.OnOperationSuccess += () =>
         {
-            Destroy(slot.item.getChecker().TryDrop(slot, shifting));
+            Destroy(slot.item.checker.TryDrop(slot, shifting));
         };
         operation.ProcessMove();
-        //ItemDesc dropItem =
-        //    slot.item.GetComponent<MovementChecker>()
-        //    .TryDrop(SlotToItem(cursorSlot), shifting);
-        //PlayerNetworker.localInstance.TryItemDropRpc(slot.item.getIdentifier(), NetworkManager.Singleton.LocalClientId, shifting);
-        //if (dropItem != null)
-        //{
-        //    GameObject droppedItem = new GameObject("DroppedItem");
-        //    droppedItem.transform.position = gameObject.transform.position;
-        //    dropItem.transform.parent = droppedItem.transform;
-        //    droppedItem.AddComponent<DroppedItem>();
-        //}
     }
 
     private bool MoveItem(ItemSlot source, ItemSlot destination,bool shifting)
     {
-        if (source.item.getChecker().CanMove(source, destination, shifting))
+        if (source.item.checker.CanMove(source, destination, shifting))
         {
             MovementOperation operation = new MovementOperation(OperationType.Move, source.id, destination.id, shifting);
             operation.OnOperationSuccess += () =>
             {
-                source.item.getChecker().TryMove(source, destination, shifting);
+                source.item.checker.TryMove(source, destination, shifting);
             };
             operation.OnOperationFail += () =>
             {
@@ -248,7 +237,7 @@ public class InventoryManager : MonoBehaviour
                 hoveredSlot.isHovered = false;
             hoveredSlot = GetHoveredSlot();
             if (hoveredSlot != null &&
-                SlotToItem(cursorSlot).item.GetComponent<MovementChecker>().CanMove(SlotToItem(cursorSlot), SlotToItem(hoveredSlot), shifting))
+                SlotToItem(cursorSlot).item.checker.CanMove(SlotToItem(cursorSlot), SlotToItem(hoveredSlot), shifting))
                 hoveredSlot.isHovered = true;
 
             if (!playerInput.inventoryButtons.MouseClick.IsPressed())
