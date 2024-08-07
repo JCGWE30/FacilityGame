@@ -24,7 +24,7 @@ public class ResearchTest
     }
 }
 
-public class ResearchTable : Interactable
+public class ResearchTable : MonoBehaviour
 {
     public List<ResearchTest> tests = new List<ResearchTest>();
 
@@ -47,6 +47,12 @@ public class ResearchTable : Interactable
         new ResearchTest("Test test","Test",100,0,5,20,10),
         new ResearchTest("Risky Test","Risky",10,0,5,5000,10)
         });
+    }
+
+    private void Start()
+    {
+        GetComponent<Interactable>().Setup(SpriteEnum.ResearchBackground, "Open Research Table")
+            .OnInteract += Interact;
     }
 
     private void Update()
@@ -98,7 +104,7 @@ public class ResearchTable : Interactable
         startTime = Time.time;
         selectedTest = test;
     }
-    protected override void Interact(bool alt)
+    private void Interact()
     {
         ResearchTableUI.instance.Open(this); ;
     }

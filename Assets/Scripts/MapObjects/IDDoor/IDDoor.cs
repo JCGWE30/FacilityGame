@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IDDoor : Interactable
+public class IDDoor : MonoBehaviour
 {
     public string doorName;
     public Access accessneeded;
@@ -13,7 +13,8 @@ public class IDDoor : Interactable
     // Start is called before the first frame update
     void Start()
     {
-        InfoText = doorName + " (ID Needed)";
+        GetComponent<Interactable>().Setup(SpriteEnum.IDChipIcon, doorName + " (ID Needed)")
+            .OnInteract += Interact;
     }
 
     private void Update()
@@ -25,7 +26,7 @@ public class IDDoor : Interactable
         }
     }
 
-    protected override void Interact(bool alt)
+    private void Interact()
     {
         ItemSlot handSlot = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
         if (handSlot.item == null)
@@ -43,6 +44,5 @@ public class IDDoor : Interactable
         {
 
         }
-        base.Interact(alt);
     }
 }

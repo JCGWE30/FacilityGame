@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Sighting : Interactable
+public class Sighting : MonoBehaviour
 {
     public ItemDesc material;
 
@@ -25,6 +25,8 @@ public class Sighting : Interactable
     {
         sighting = this;
         harvestBar = GameObject.Find("HUD/HarvestPanel");
+        GetComponent<Interactable>().Setup(SpriteEnum.AnomolusMaterialItem, "Harvest Material")
+            .OnInteract += Interact;
     }
 
     private void Update()
@@ -57,7 +59,7 @@ public class Sighting : Interactable
         endtime = Time.time + time;
     }
 
-    protected override void Interact(bool alt)
+    private void Interact()
     {
         if (!holding)
         {

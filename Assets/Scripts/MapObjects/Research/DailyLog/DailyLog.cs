@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DailyLog : Interactable
+public class DailyLog : MonoBehaviour
 {
     public static DailyLog instance;
 
@@ -10,10 +10,16 @@ public class DailyLog : Interactable
 
     private float lastComitted = 0;
 
-    public void Initalize()
+    public void Awake()
     {
         if (instance == null)
             instance = this; 
+    }
+
+    private void Start()
+    {
+        GetComponent<Interactable>().Setup(SpriteEnum.ResearchBackground, "Open Daily Log")
+            .OnInteract += Interact;
     }
 
     private void Update()
@@ -32,9 +38,9 @@ public class DailyLog : Interactable
         return Mathf.Max(0, Mathf.Min(lastComitted*int.MaxValue, 30 - (Time.time - lastComitted)));
     }
 
-    protected override void Interact(bool alt)
+    private void Interact()
     {
-        if (alt)
+        if (InputManager.instance.onFoot.AltHeld.IsPressed())
         {
             if (diskCount >= 10)
                 return;
