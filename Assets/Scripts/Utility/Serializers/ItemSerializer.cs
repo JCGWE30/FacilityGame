@@ -69,7 +69,7 @@ public class ItemSerializer
         GameObject newObject;
         if (serializedObject.itemId.Length>0)
         {
-            newObject = Object.Instantiate(ItemFinder.getItemByID(serializedObject.itemId.ToString()));
+            newObject = Object.Instantiate(ItemFinder.Find(serializedObject.itemId.ToString()).gameObject);
             newObject.name = serializedObject.name;
         }
         else
@@ -79,7 +79,8 @@ public class ItemSerializer
         foreach(SerializedComponent component in serializedObject.components)
         {
             System.Type componentType = System.Type.GetType($"{component.componentName},Assembly-CSharp");
-            ISerializableComponent newComponent = newObject.AddComponent(componentType) as ISerializableComponent;
+            Component comp = newObject.GetComponent(componentType) ?? newObject.AddComponent(componentType);
+            ISerializableComponent newComponent = comp as ISerializableComponent;
             newComponent.DeserializeComponent(new ComponentValues(component.data));
         }
         foreach(SerializedGameObject child in serializedObject.children)

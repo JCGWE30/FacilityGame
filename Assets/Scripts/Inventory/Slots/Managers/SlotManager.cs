@@ -8,17 +8,16 @@ public abstract class SlotManager : MonoBehaviour
     private List<InventorySlot> slots = new List<InventorySlot>();
     public StorageContainer container;
     // Start is called before the first frame update
-    public void InitManager()
+    private void Awake()
     {
         slots = transform.GetComponentsInChildren<InventorySlot>().ToList();
         int count = 0;
         foreach (var item in slots)
         {
-            item.Init(this);
             item.id = count;
             count++;
         }
-        Init();
+        Initalize();
     }
 
     public InventorySlot GetSlot(int slot)
@@ -54,11 +53,12 @@ public abstract class SlotManager : MonoBehaviour
             count++;
         }
     }
-    protected virtual void Init()
+    protected virtual void ItemUpdate(StorageContainer container)
     {
 
     }
-    protected virtual void ItemUpdate(StorageContainer container)
+    //Inheriting classes CANNOT override awake. Thats why this is here
+    protected virtual void Initalize()
     {
 
     }

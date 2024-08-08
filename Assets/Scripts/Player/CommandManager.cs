@@ -45,7 +45,26 @@ public class CommandManager : MonoBehaviour
 
     private void ExecuteCommand(string command, string[] args)
     {
-        
+        if (command == "giveItem")
+        {
+            if (args.Length == 0)
+                return;
+            ItemDesc item = ItemFinder.FindInstanced(args[0]);
+            if (item != null)
+            {
+                foreach(var slot in EquipmentContainer.instance.GetItems())
+                {
+                    if (item.checker.TryInsert(slot))
+                    {
+                        MovementOperation operation = new MovementOperation(args[0], slot.id, false);
+                        operation.OnOperationFail += () => { Destroy(item); };
+                        operation.OnOperationCanceled += () => { Destroy(item); };
+                        operation.ProcessMove();
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     public void ExitCommand()

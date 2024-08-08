@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using Unity.Collections;
@@ -93,6 +94,20 @@ public class PlayerNetworker : NetworkBehaviour
         {
             EquipmentContainer.instance.GetItem(runner).SetId(id);
             runner++;
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void CreateItemRpc(string id)
+    {
+        if (!IsOwnedByServer)
+            return;
+        ItemDesc item = ItemFinder.Find(id).GetComponent<ItemDesc>();
+        EquipmentContainer container = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<EquipmentContainer>();
+        foreach(var itemSlot in container.GetItems())
+        {
+            if (item.checker.TryInsert(itemSlot))
+                return;
         }
     }
 }

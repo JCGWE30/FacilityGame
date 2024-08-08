@@ -49,10 +49,16 @@ public class DroppedItem : MonoBehaviour
         }
         initDroppedItem();
     }
+    public void RegisterNewItem()
+    {
+        droppedItem = gameObject.GetComponentInChildren<ItemDesc>();
+        if (droppedItem != null)
+            initDroppedItem();
+    }
     private void initDroppedItem()
     {
         gameObject.layer = 6;
-        GetComponent<Interactable>().Setup(droppedItem.sprite, droppedItem.displayName)
+        gameObject.GetOrAddComponent<Interactable>().Setup(droppedItem.sprite, droppedItem.displayName)
             .OnInteract += Interact;
 
         gameObject.transform.localScale = droppedItem.worldModel.transform.lossyScale;
