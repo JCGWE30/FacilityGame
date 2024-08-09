@@ -14,12 +14,22 @@ public class ItemFinder : MonoBehaviour
             instance = this;
     }
 
-    public static GameObject getItemByID(string id)
+    public static ItemDesc Find(string id)
     {
         foreach(GameObject obj in instance.itemList.items)
         {
             if (obj.GetComponent<ItemDesc>().id == id)
-                return obj;
+                return obj.GetComponent<ItemDesc>();
+        }
+        return null;
+    }
+
+    public static ItemDesc FindInstanced(string id)
+    {
+        foreach (GameObject obj in instance.itemList.items)
+        {
+            if (obj.GetComponent<ItemDesc>().id == id)
+                return Instantiate(obj.GetComponent<ItemDesc>());
         }
         return null;
     }

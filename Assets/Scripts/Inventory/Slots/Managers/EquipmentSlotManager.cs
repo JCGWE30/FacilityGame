@@ -11,7 +11,7 @@ public class EquipmentSlotManager : SlotManager
     private HotbarWatcher hotbar;
     public EquipmentContainer equipmentContainer { get; private set; }
 
-    protected override void Init()
+    protected override void Initalize()
     {
         equipmentContainer = container.GetComponent<EquipmentContainer>();
         manager = InventoryManager.instance;

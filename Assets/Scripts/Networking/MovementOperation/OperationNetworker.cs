@@ -31,9 +31,10 @@ public class OperationNetworker : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SendMovementOperationRpc(MovementOperation.MovementOperationData data)
     {
-        if (GlobalIdentifier.FetchObject(data.sourceId)?.transform.childCount == 0)
+        if (GlobalIdentifier.FetchObject(data.sourceId)?.transform.childCount == 0&&data.type!=OperationType.Create)
         {
             SendResults(OperationResult.Failure, data.operationId);
+            return;
         }
 
         DroppedItem sourceItem;
@@ -57,6 +58,11 @@ public class OperationNetworker : NetworkBehaviour
                 source = GlobalIdentifier.FetchObject<ItemSlot>(data.sourceId);
                 destination = GlobalIdentifier.FetchObject<ItemSlot>(data.destinationId);
                 success = source.item.checker.TryMove(source, destination, data.shifting);
+                ItemDesc moveItem = destination.GetComponentInParent<ItemDesc>();
+                if (moveItem.GetComponentInParent<DroppedItem>() != null)
+                {
+                    SpawnDroppedItemRpc(moveItem.GetComponentInParent<GlobalIdentifier>().id.Value, ItemSerializer.serializeGameObject(moveItem.gameObject));
+                }
                 SendResults(success ? OperationResult.Success : OperationResult.Cancelled, data.operationId);
                 break;
             case OperationType.Drop:
@@ -72,6 +78,12 @@ public class OperationNetworker : NetworkBehaviour
                     SpawnDroppedItem(dropItem, GlobalIdentifier.InitalizeID(itemToDrop));
                 }
                 SendResults(success ? OperationResult.Success : OperationResult.Cancelled, data.operationId);
+                break;
+            case OperationType.Create:
+                ItemDesc item = ItemFinder.FindInstanced(data.itemId.ToString()).GetComponent<ItemDesc>();
+                EquipmentContainer container = NetworkManager.Singleton.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<EquipmentContainer>();
+                ItemSlot slot = GlobalIdentifier.FetchObject<ItemSlot>(data.destinationId);
+                SendResults(item.checker.TryInsert(slot) ? OperationResult.Success : OperationResult.Cancelled, data.operationId);
                 break;
         }
     }
@@ -103,6 +115,12 @@ public class OperationNetworker : NetworkBehaviour
             instance.queuedItems.Add(new QueuedItem { item = item, id=id});
             return;
         }
+        if (droppedItem.transform.childCount > 0)
+        {
+            foreach (Transform child in droppedItem.transform)
+                Destroy(child.gameObject);
+        }
         item.transform.parent = droppedItem.transform;
+        droppedItem.RegisterNewItem();
     }
 }

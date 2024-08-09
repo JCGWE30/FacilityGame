@@ -41,11 +41,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (instance == null)
             instance = this;
-        equipmentSlots.InitManager();
-        backpackSlots.InitManager();
-        beltSlots.InitManager();
-        storageSlots.InitManager();
-        hotbar.Init();
         playerInput = GetComponent<InputManager>();
     }
 
@@ -206,14 +201,20 @@ public class InventoryManager : MonoBehaviour
         if (source.item.checker.CanMove(source, destination, shifting))
         {
             MovementOperation operation = new MovementOperation(OperationType.Move, source.id, destination.id, shifting);
+            
             operation.OnOperationSuccess += () =>
             {
-                source.item.checker.TryMove(source, destination, shifting);
+                if (destination.transform.parent.GetComponent<EquipmentContainer>() != null)
+                    source.item.checker.TryMove(source, destination, shifting);
+                else
+                    Destroy(source.item.gameObject);
             };
+
             operation.OnOperationFail += () =>
             {
                source.Clear();
             };
+
             operation.ProcessMove();
             return true;
         }

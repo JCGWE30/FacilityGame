@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,7 +8,8 @@ public enum OperationType
 {
     Pickup,
     Move,
-    Drop
+    Drop,
+    Create
 }
 public class MovementOperation : MonoBehaviour
 {
@@ -32,6 +34,7 @@ public class MovementOperation : MonoBehaviour
         public long sourceId;
         public long destinationId;
         public bool shifting;
+        public FixedString64Bytes itemId;
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref operationId);
@@ -39,6 +42,7 @@ public class MovementOperation : MonoBehaviour
             serializer.SerializeValue(ref sourceId);
             serializer.SerializeValue(ref destinationId);
             serializer.SerializeValue(ref shifting);
+            serializer.SerializeValue(ref itemId);
         }
     }
 
@@ -72,6 +76,20 @@ public class MovementOperation : MonoBehaviour
         operations.Add(this);
         nextId++;
     }
+    //Used for creating
+    public MovementOperation(string itemId, long destinationId, bool shifting)
+    {
+        data = new MovementOperationData
+        {
+            operationId = nextId,
+            itemId = itemId,
+            destinationId = destinationId,
+            type = OperationType.Create,
+            shifting = shifting
+        };
+        operations.Add(this);
+        nextId++;
+    }
 
     public void ProcessMove()
     {
@@ -86,9 +104,11 @@ public class MovementOperation : MonoBehaviour
             if (tempOp.data.operationId == id)
                 operation = tempOp;
         }
-
+        
         if (operation?.data==null)
             return;
+
+        Debug.Log($"Operation {id} finished as a {result} operation data: {operation.data}");
 
         switch (result)
         {

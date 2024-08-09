@@ -7,7 +7,7 @@ public class HotbarWatcher : MonoBehaviour
 {
     public StorageContainer container;
     // Start is called before the first frame update
-    public void Init()
+    private void Awake()
     {
         foreach (Transform item in transform)
         {

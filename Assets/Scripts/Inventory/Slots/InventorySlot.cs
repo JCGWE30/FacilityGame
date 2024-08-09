@@ -69,9 +69,9 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler
         return false;
     }
 
-    public void Init(SlotManager slotman)
+    private void Awake()
     {
-        slotManager = slotman;
+        slotManager = GetComponentInParent<SlotManager>();
         manager = InventoryManager.instance;
 
         slotsprites.Add(SlotType.Item, SpriteFinder.GetSprite(SpriteEnum.ItemSlot));
