@@ -32,9 +32,9 @@ public class ItemDesc : MonoBehaviour
     public Sprite sprite { get; private set; }
     public Slot itemType;
 
-    private void Start()
+    public void SetSprite()
     {
-        sprite = SpriteFinder.GetSprite(spriteName);
+        sprite = SpriteFinder.Find(spriteName);
     }
 
     public bool Match(ItemDesc desc)

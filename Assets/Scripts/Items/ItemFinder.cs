@@ -12,6 +12,10 @@ public class ItemFinder : MonoBehaviour
     {
         if (instance == null)
             instance = this;
+        foreach(GameObject obj in itemList.items)
+        {
+            obj.GetComponent<ItemDesc>().SetSprite();
+        }
     }
 
     public static ItemDesc Find(string id)
@@ -29,7 +33,11 @@ public class ItemFinder : MonoBehaviour
         foreach (GameObject obj in instance.itemList.items)
         {
             if (obj.GetComponent<ItemDesc>().id == id)
-                return Instantiate(obj.GetComponent<ItemDesc>());
+            {
+                var itm = Instantiate(obj.GetComponent<ItemDesc>());
+                itm.SetSprite();
+                return itm;
+            }
         }
         return null;
     }

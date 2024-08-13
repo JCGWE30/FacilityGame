@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class LatheRecipe : MonoBehaviour
+public class LatheRecipe
 {
     public int woodCost;
     public int plasticCost;

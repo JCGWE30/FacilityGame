@@ -104,8 +104,8 @@ public class LatheUIManager : MonoBehaviour
             newRecipe.woodCost.text = recipe.woodCost.ToString();
             newRecipe.woodImage.gameObject.SetActive(recipe.woodCost > 0);
 
-
-            newRecipe.result.sprite = ItemFinder.Find(recipe.resultItem).sprite;
+            ItemDesc item = ItemFinder.Find(recipe.resultItem);
+            newRecipe.result.sprite = item.sprite;
             newRecipe.resultAmount.text = recipe.resultAmount.ToString();
 
 

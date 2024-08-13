@@ -8,14 +8,15 @@ public class SpriteFinder : MonoBehaviour
 
     private static SpriteFinder instance;
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
             instance = this;
     }
 
-    public static Sprite GetSprite(SpriteEnum spriteValue)
+    public static Sprite Find(SpriteEnum spriteValue)
     {
+        var obj = instance;
         foreach(Sprite sprite in instance.spriteHolder.sprites)
         {
             if (sprite.name == spriteValue.ToString())
@@ -24,7 +25,7 @@ public class SpriteFinder : MonoBehaviour
         return null;
     }
 
-    public static Sprite GetSprite(string spriteValue)
+    public static Sprite Find(string spriteValue)
     {
         foreach (Sprite sprite in instance.spriteHolder.sprites)
         {

@@ -30,7 +30,7 @@ public class Interactable : MonoBehaviour
 
     public Interactable Setup(SpriteEnum sprite, string text)
     {
-        infoImage = SpriteFinder.GetSprite(sprite);
+        infoImage = SpriteFinder.Find(sprite);
         infoText = text;
         return this;
     }
