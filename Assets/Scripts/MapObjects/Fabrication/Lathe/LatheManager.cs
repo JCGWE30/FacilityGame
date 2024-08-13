@@ -3,6 +3,29 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public class LatheRecipe : MonoBehaviour
+{
+    public int woodCost;
+    public int plasticCost;
+    public int ironCost;
+
+    public int resultAmount;
+    public string resultItem;
+
+    public long craftTime;
+
+    public LatheRecipe(int wood, int plastic, int iron, int result, string item, long craft)
+    {
+        woodCost = wood;
+        plasticCost = plastic;
+        ironCost = iron;
+
+        resultAmount = result;
+        resultItem = item;
+        craftTime = craft;
+    }
+}
+
 public class LatheManager : MonoBehaviour
 {
     private int maxResource = 100;
@@ -10,9 +33,14 @@ public class LatheManager : MonoBehaviour
     private bool open;
 
     public LatheUIManager latheMenu;
+    public List<LatheRecipe> recipes = new List<LatheRecipe>();  
 
     private void Start()
     {
+        recipes = new List<LatheRecipe>(new[]
+        {
+            new LatheRecipe(1,1,1,1,"itemCrate",5)
+        });
         panel = GameObject.Find("/HUD/LatheMenu");
         GetComponent<Interactable>().Setup(SpriteEnum.FabricationIcon, "Open Lathe")
             .OnInteract += Interact;
@@ -39,18 +67,18 @@ public class LatheManager : MonoBehaviour
         return new int[] { donor, recepient };
     }
 
-    public bool CraftItem(Recipe recipe)
+    public bool CraftItem(LatheRecipe recipe)
     {
-        ItemDesc result = Instantiate(recipe.result);
+        ItemDesc result = ItemFinder.FindInstanced(recipe.resultItem);
         if (recipe.resultAmount > 1)
         {
-            result.GetComponent<StackableChecker>().amount = recipe.resultAmount;
+            (result.checker as StackableChecker).amount = recipe.resultAmount;
         }
         foreach (var item in GetComponent<LatheContainer>().GetItems())
         {
             if (item.item == null)
             {
-                StartCoroutine(Craft(item, result,recipe.craftTime));
+                StartCoroutine(Craft(item, result, recipe.craftTime));
                 return true;
             }
         }
