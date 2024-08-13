@@ -92,7 +92,8 @@ public class LatheUIManager : MonoBehaviour
         {
             LatheUIObject newRecipe = Instantiate(recipePrefab).GetComponent<LatheUIObject>();
 
-            newRecipe.transform.parent = recipe
+            newRecipe.transform.parent = transform.Find("Recipes");
+
 
             newRecipe.ironCost.text = recipe.ironCost.ToString();
             newRecipe.ironImage.gameObject.SetActive(recipe.ironCost > 0);
@@ -103,8 +104,10 @@ public class LatheUIManager : MonoBehaviour
             newRecipe.woodCost.text = recipe.woodCost.ToString();
             newRecipe.woodImage.gameObject.SetActive(recipe.woodCost > 0);
 
+
             newRecipe.result.sprite = ItemFinder.Find(recipe.resultItem).sprite;
             newRecipe.resultAmount.text = recipe.resultAmount.ToString();
+
 
             newRecipe.selectButton.onClick.AddListener(() => { SetRecipe(recipe); });
         }
