@@ -74,15 +74,15 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler
         slotManager = GetComponentInParent<SlotManager>();
         manager = InventoryManager.instance;
 
-        slotsprites.Add(SlotType.Item, SpriteFinder.GetSprite(SpriteEnum.ItemSlot));
-        slotsprites.Add(SlotType.Hand, SpriteFinder.GetSprite(SpriteEnum.HandSlot));
-        slotsprites.Add(SlotType.Back, SpriteFinder.GetSprite(SpriteEnum.BackSlot));
-        slotsprites.Add(SlotType.Belt, SpriteFinder.GetSprite(SpriteEnum.BeltSlot));
-        slotsprites.Add(SlotType.Uniform, SpriteFinder.GetSprite(SpriteEnum.UniformSlot));
-        slotsprites.Add(SlotType.Vest, SpriteFinder.GetSprite(SpriteEnum.VestSlot));
-        slotsprites.Add(SlotType.Helmet, SpriteFinder.GetSprite(SpriteEnum.HelmetSlot));
-        slotsprites.Add(SlotType.Weapon, SpriteFinder.GetSprite(SpriteEnum.WeaponSlot));
-        slotsprites.Add(SlotType.None, SpriteFinder.GetSprite(SpriteEnum.EmptySlot));
+        slotsprites.Add(SlotType.Item, SpriteFinder.Find(SpriteEnum.ItemSlot));
+        slotsprites.Add(SlotType.Hand, SpriteFinder.Find(SpriteEnum.HandSlot));
+        slotsprites.Add(SlotType.Back, SpriteFinder.Find(SpriteEnum.BackSlot));
+        slotsprites.Add(SlotType.Belt, SpriteFinder.Find(SpriteEnum.BeltSlot));
+        slotsprites.Add(SlotType.Uniform, SpriteFinder.Find(SpriteEnum.UniformSlot));
+        slotsprites.Add(SlotType.Vest, SpriteFinder.Find(SpriteEnum.VestSlot));
+        slotsprites.Add(SlotType.Helmet, SpriteFinder.Find(SpriteEnum.HelmetSlot));
+        slotsprites.Add(SlotType.Weapon, SpriteFinder.Find(SpriteEnum.WeaponSlot));
+        slotsprites.Add(SlotType.None, SpriteFinder.Find(SpriteEnum.EmptySlot));
 
         imageObject = new GameObject("Image").AddComponent<Image>();
         imageObject.rectTransform.sizeDelta = new Vector2(150, 150);

@@ -29,7 +29,10 @@ public class ItemFinder : MonoBehaviour
         foreach (GameObject obj in instance.itemList.items)
         {
             if (obj.GetComponent<ItemDesc>().id == id)
-                return Instantiate(obj.GetComponent<ItemDesc>());
+            {
+                var itm = Instantiate(obj.GetComponent<ItemDesc>());
+                return itm;
+            }
         }
         return null;
     }

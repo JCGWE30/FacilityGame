@@ -22,8 +22,8 @@ public class IDCardHandler : MonoBehaviour
 
     private void Start()
     {
-        normalSprite = SpriteFinder.GetSprite(SpriteEnum.IDItem);
-        adminSprite = SpriteFinder.GetSprite(SpriteEnum.AdminIDItem);
+        normalSprite = SpriteFinder.Find(SpriteEnum.IDItem);
+        adminSprite = SpriteFinder.Find(SpriteEnum.AdminIDItem);
         ApplyAccessPreset(AccessPreset.Admin);
     }
     public bool HasAccess(Access access)

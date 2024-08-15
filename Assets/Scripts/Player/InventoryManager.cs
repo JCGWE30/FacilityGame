@@ -231,7 +231,7 @@ public class InventoryManager : MonoBehaviour
             if (OnInventory())
                 cursorImage.sprite = cursorSlot.itemSprite;
             else
-                cursorImage.sprite = SpriteFinder.GetSprite(SpriteEnum.DropItem);
+                cursorImage.sprite = SpriteFinder.Find(SpriteEnum.DropItem);
             cursorImage.transform.position = playerInput.inventoryButtons.MousePosition.ReadValue<Vector2>();
 
             if (hoveredSlot != null)

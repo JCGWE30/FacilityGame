@@ -6,9 +6,12 @@ using UnityEngine.UI;
 
 public class LatheUIManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject recipePrefab;
+
     private LatheManager manager;
     public InputManager playerInput;
-    private Recipe selectedRecipe;
+    private LatheRecipe selectedRecipe;
     private bool fabricating;
     private float fabricateStart;
 
@@ -56,7 +59,7 @@ public class LatheUIManager : MonoBehaviour
         fabricating = true;
 
         fabricatingPanel.SetActive(true);
-        fabricatingImage.GetComponent<Image>().sprite = selectedRecipe.result.sprite;
+        fabricatingImage.GetComponent<Image>().sprite = ItemFinder.Find(selectedRecipe.resultItem).sprite;
         infoPanel.SetActive(false);
     }
 
@@ -85,11 +88,28 @@ public class LatheUIManager : MonoBehaviour
 
     public void Open(LatheManager lathe)
     {
-        foreach(Transform item in lathe.transform.Find("Recipes"))
+        foreach(LatheRecipe recipe in lathe.recipes)
         {
-            GameObject newRecipe = Instantiate(item.gameObject);
+            LatheUIObject newRecipe = Instantiate(recipePrefab).GetComponent<LatheUIObject>();
+
             newRecipe.transform.parent = transform.Find("Recipes");
-            newRecipe.SetActive(true);
+
+
+            newRecipe.ironCost.text = recipe.ironCost.ToString();
+            newRecipe.ironImage.gameObject.SetActive(recipe.ironCost > 0);
+
+            newRecipe.plasticCost.text = recipe.plasticCost.ToString();
+            newRecipe.plasticImage.gameObject.SetActive(recipe.plasticCost > 0);
+
+            newRecipe.woodCost.text = recipe.woodCost.ToString();
+            newRecipe.woodImage.gameObject.SetActive(recipe.woodCost > 0);
+
+            ItemDesc item = ItemFinder.Find(recipe.resultItem);
+            newRecipe.result.sprite = item.sprite;
+            newRecipe.resultAmount.text = recipe.resultAmount.ToString();
+
+
+            newRecipe.selectButton.onClick.AddListener(() => { SetRecipe(recipe); });
         }
         playerInput.MenuOpen();
         playerInput.setControls(InputManager.ControlType.Lathe);
@@ -111,7 +131,7 @@ public class LatheUIManager : MonoBehaviour
         manager = null;
     }
 
-    public void SetRecipe(Recipe recipe)
+    public void SetRecipe(LatheRecipe recipe)
     {
         if (fabricating)
             return;
@@ -122,9 +142,10 @@ public class LatheUIManager : MonoBehaviour
         }
         else
         {
+            ItemDesc resultItem = ItemFinder.Find(recipe.resultItem);
             selectedRecipe = recipe;
-            infoImage.sprite = selectedRecipe.result.sprite;
-            infoText.text = selectedRecipe.result.displayName + " x" + selectedRecipe.resultAmount;
+            infoImage.sprite = resultItem.sprite;
+            infoText.text = resultItem.displayName + " x" + selectedRecipe.resultAmount;
             infoPanel.SetActive(true);
         }
     }
