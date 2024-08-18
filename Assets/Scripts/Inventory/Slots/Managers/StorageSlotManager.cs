@@ -19,7 +19,7 @@ public class StorageSlotManager : SlotManager
         inventorypanel.transform.localPosition = new Vector3(-467,0,0);
         inventorypanel.gameObject.SetActive(true);
         isOpen = true;
-        text.text = container.GetComponent<ItemDesc>().displayName;
+        text.text = container.GetComponent<ItemDesc>()?.displayName ?? "Container";
         gameObject.transform.parent.gameObject.SetActive(true);
         this.container = container;
     }

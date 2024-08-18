@@ -57,8 +57,8 @@ public class CommandManager : MonoBehaviour
                     if (item.checker.TryInsert(slot))
                     {
                         MovementOperation operation = new MovementOperation(args[0], slot.id, false);
-                        operation.OnOperationFail += () => { Destroy(item); };
-                        operation.OnOperationCanceled += () => { Destroy(item); };
+                        operation.OnOperationFail += () => { Destroy(item.gameObject); };
+                        operation.OnOperationCanceled += () => { Destroy(item.gameObject); };
                         operation.ProcessMove();
                         return;
                     }

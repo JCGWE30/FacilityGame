@@ -22,14 +22,14 @@ public enum SlotType
     None
 }
 
-public class InventorySlot : MonoBehaviour, IPointerDownHandler
+public class InventorySlot : MonoBehaviour, IPointerDownHandler, IInatalizer
 {
     public Sprite defualtImage;
     public Sprite itemSprite;
     public SlotType slotType;
     public SpriteHolder sprites;
 
-    public SlotManager slotManager { get; private set; }
+    public SlotManager slotManager { get { return gameObject.GetComponentInParent<SlotManager>(); } }
 
     private ItemDesc heldItem;
 
@@ -69,9 +69,8 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler
         return false;
     }
 
-    private void Awake()
+    public void Initalize()
     {
-        slotManager = GetComponentInParent<SlotManager>();
         manager = InventoryManager.instance;
 
         slotsprites.Add(SlotType.Item, SpriteFinder.Find(SpriteEnum.ItemSlot));

@@ -5,8 +5,4 @@ using UnityEngine;
 
 public class BasicContainer : StorageContainer
 {
-    protected override void SlotInitalize(int id, ItemSlot slot)
-    {
-        slot.AddComponent<GlobalIdentifier>();
-    }
 }

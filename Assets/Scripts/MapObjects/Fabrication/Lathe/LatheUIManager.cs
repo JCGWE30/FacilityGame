@@ -1,19 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LatheUIManager : MonoBehaviour
+public class LatheUIManager : MonoBehaviour, IInatalizer
 {
     [SerializeField]
     private GameObject recipePrefab;
 
+    public static LatheUIManager instance;
+
     private LatheManager manager;
     public InputManager playerInput;
     private LatheRecipe selectedRecipe;
-    private bool fabricating;
-    private float fabricateStart;
+    private bool shouldFabricate { get { return manager?.isCrafting.Value ?? false;} }
+    private bool fabricationMode = false;
 
     //UI Elements
     private Button infoButton;
@@ -29,8 +32,11 @@ public class LatheUIManager : MonoBehaviour
     private TMP_Text woodCount;
 
 
-    private void Awake()
+    public void Initalize()
     {
+        if (instance == null)
+            instance = this;
+
         infoButton = transform.Find("InfoPanel/Button").GetComponent<Button>();
         fabricatingPanel = transform.Find("Fabricating").gameObject;
         fabricatingImage = transform.Find("Fabricating/Image").GetComponent<Image>();
@@ -51,36 +57,43 @@ public class LatheUIManager : MonoBehaviour
     {
         if (selectedRecipe == null)
             return;
-        if (fabricating)
-            return;
-        if (!manager.CraftItem(selectedRecipe))
-            return;
-        fabricateStart = Time.time;
-        fabricating = true;
-
-        fabricatingPanel.SetActive(true);
-        fabricatingImage.GetComponent<Image>().sprite = ItemFinder.Find(selectedRecipe.resultItem).sprite;
-        infoPanel.SetActive(false);
+        manager.CraftItem(selectedRecipe);
     }
 
     private void Update()
     {
-        if (manager != null)
-        {
-            ironCount.text = manager.iron + "";
-            plasticCount.text = manager.plastic + "";
-            woodCount.text = manager.wood + "";
-        }
-        if (fabricating)
-        {
-            float timeElapsed = Time.time - fabricateStart;
-            float percentage = timeElapsed/selectedRecipe.craftTime;
-            fabricatingImage.GetComponent<Image>().fillAmount = percentage;
+        if (manager == null)
+            return;
 
-            if (percentage >= 1)
+        ironCount.text = manager.iron + "";
+        plasticCount.text = manager.plastic + "";
+        woodCount.text = manager.wood + "";
+
+        if (fabricationMode != shouldFabricate)
+        {
+            if (shouldFabricate)
+            {
+                fabricatingPanel.SetActive(true);
+                fabricatingImage.GetComponent<Image>().sprite = ItemFinder.Find(manager.currentRecipe.resultItem).sprite;
+                infoPanel.SetActive(false);
+            }
+            else
+            {
+                fabricatingPanel.SetActive(false);
+                infoPanel.SetActive(selectedRecipe!=null);
+            }
+            fabricationMode = shouldFabricate;
+        }
+
+        if(fabricationMode)
+        {
+            float timeLeft = manager.craftingFinish.Value-NetworkManager.Singleton.ServerTime.TimeAsFloat;
+            float percentage = timeLeft/manager.currentRecipe.craftTime;
+            fabricatingImage.GetComponent<Image>().fillAmount = 1-percentage;
+
+            if (percentage <= 0)
             {
                 selectedRecipe = null;
-                fabricating = false;
                 fabricatingPanel.SetActive(false);
             }
         }
@@ -122,8 +135,7 @@ public class LatheUIManager : MonoBehaviour
         {
             Destroy(item.gameObject);
         }
-        if (!fabricating)
-            selectedRecipe = null;
+        selectedRecipe = null;
         infoPanel.SetActive(false);
         playerInput.MenuClose();
         playerInput.setControls(InputManager.ControlType.Basic);
@@ -133,7 +145,7 @@ public class LatheUIManager : MonoBehaviour
 
     public void SetRecipe(LatheRecipe recipe)
     {
-        if (fabricating)
+        if (fabricationMode)
             return;
         if (recipe == null)
         {

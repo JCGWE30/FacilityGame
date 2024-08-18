@@ -110,6 +110,17 @@ public class StackableChecker : MovementChecker, ISerializableComponent
         return amounts[0]==0;
     }
 
+    protected override bool GetCanFit(ItemSlot to)
+    {
+        if (to.item == null)
+            return true;
+        if (!to.item.Match(GetComponent<ItemDesc>()))
+            return false;
+        StackableChecker recipient = to.item.GetComponent<StackableChecker>();
+        int[] amounts = amountbalance(amount, recipient.amount);
+        return amounts[0] == 0;
+    }
+
     protected override ItemDesc GetTryDrop(ItemSlot from,bool shifting)
     {
         if (shifting)

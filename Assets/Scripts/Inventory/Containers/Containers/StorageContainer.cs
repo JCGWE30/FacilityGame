@@ -52,7 +52,7 @@ public abstract class StorageContainer : MonoBehaviour
     {
 
     }
-    public ItemSlot GetItemByID(int slot)
+    public ItemSlot GetItemByID(long slot)
     {
         return IdToSlot(slot);
     }
