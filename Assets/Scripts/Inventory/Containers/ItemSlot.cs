@@ -28,7 +28,7 @@ public class ItemSlot : MonoBehaviour,ISerializableComponent
 
     public void Clear()
     {
-        Destroy(item);
+        Destroy(item.gameObject);
     }
 
     public void ClearNextItem()

@@ -32,6 +32,7 @@ public abstract class MovementChecker : MonoBehaviour
         to.GetComponentInParent<StorageContainer>().SetItem(to.id, GetComponent<ItemDesc>());
         return true;
     }
+
     public ItemDesc TryDrop(ItemSlot from, bool shifting)
     {
         return GetTryDrop(from, shifting);
@@ -39,5 +40,14 @@ public abstract class MovementChecker : MonoBehaviour
     protected virtual ItemDesc GetTryDrop(ItemSlot from,bool shifting)
     {
         return GetComponent<ItemDesc>();
+    }
+
+    public bool CanFit(ItemSlot to)
+    {
+        return GetCanFit(to);
+    }
+    protected virtual bool GetCanFit(ItemSlot to)
+    {
+        return to.item == null;
     }
 }

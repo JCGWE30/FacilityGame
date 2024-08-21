@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class SlotManager : MonoBehaviour
+public abstract class SlotManager : MonoBehaviour, IInatalizer
 {
     private List<InventorySlot> slots = new List<InventorySlot>();
     public StorageContainer container;
     // Start is called before the first frame update
-    private void Awake()
+    public void Initalize()
     {
         slots = transform.GetComponentsInChildren<InventorySlot>().ToList();
         int count = 0;
@@ -17,7 +17,7 @@ public abstract class SlotManager : MonoBehaviour
             item.id = count;
             count++;
         }
-        Initalize();
+        SubInitalize();
     }
 
     public InventorySlot GetSlot(int slot)
@@ -58,7 +58,7 @@ public abstract class SlotManager : MonoBehaviour
 
     }
     //Inheriting classes CANNOT override awake. Thats why this is here
-    protected virtual void Initalize()
+    protected virtual void SubInitalize()
     {
 
     }

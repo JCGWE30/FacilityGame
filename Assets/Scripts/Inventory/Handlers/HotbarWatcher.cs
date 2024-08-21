@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HotbarWatcher : MonoBehaviour
+public class HotbarWatcher : MonoBehaviour, IInatalizer
 {
     public StorageContainer container;
     // Start is called before the first frame update
-    private void Awake()
-    {
+    public void Initalize()
+    { 
         foreach (Transform item in transform)
         {
             Image image = new GameObject("Image").AddComponent<Image>();
