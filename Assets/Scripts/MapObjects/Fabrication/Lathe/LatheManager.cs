@@ -40,7 +40,7 @@ public class LatheManager : NetworkBehaviour
         latheMenu = LatheUIManager.instance;
         recipes = new List<LatheRecipe>(new[]
         {
-            new LatheRecipe(1,1,1,1,"itemCrate",0)
+            new LatheRecipe(1,1,1,1,"itemCrate",5)
         });
         GetComponent<Interactable>().Setup(SpriteEnum.FabricationIcon, "Open Lathe")
             .OnInteract += Interact;
@@ -186,7 +186,7 @@ public class LatheManager : NetworkBehaviour
         ItemDesc item = ItemSerializer.deserializeGameObject(serializedObject).GetComponent<ItemDesc>();
         if (item == null)
             return;
-        ItemSlot slot = GlobalIdentifier.FetchObject<ItemSlot>(slotId);
+        ItemSlot slot = gameObject.GetComponent<StorageContainer>().GetItemByID(slotId);
         item.checker.TryInsert(slot);
     }
 
