@@ -1,0 +1,47 @@
+name: Style Enforcer
+
+on: [push, pull_request]
+
+jobs:
+  style-check:
+    name: Style Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.200'  # Use the version of .NET that your project targets
+
+    - name: Install dotnet format tool
+      run: dotnet tool install -g dotnet-format
+
+    - name: Run style check
+      run: |
+        dotnet format --check --report report.txt --verbosity detailed
+        cat report.txt
+      env:
+        DOTNET_NOLOGO: true
+
+    - name: Upload report as artifact (if check fails)
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: style-report
+        path: report.txt
+  
+  send-info:
+    name: Log Failures
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download failure report
+      uses: actions/download-artifact@v4
+      with:
+        name: style-report
+    
+    - name: Print report (for now)
+      run: cat report.txt
