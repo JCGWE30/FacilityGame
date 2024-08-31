@@ -35,6 +35,7 @@ jobs:
   
   send-info:
     name: Log Failures
+    needs: style-check
     runs-on: ubuntu-latest
 
     steps:
