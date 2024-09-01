@@ -4,20 +4,23 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class Sighting : NetworkBehaviour
 {
+    private static readonly float HOLD_TIME = 2f;
 
     public ItemDesc material;
 
-    private NetworkVariable<bool> active = new NetworkVariable<bool>(true);
+    private NetworkVariable<bool> active = new NetworkVariable<bool>(false);
 
     private bool holding;
-    private float holdTime = 2f;
     private float startedHolding;
     private float endtime;
     private Vector3 position;
     private GameObject harvestBar;
+
+    private Dictionary<ulong, float> serverHoldTimes = new Dictionary<ulong, float>();
 
     public static Sighting sighting; //Have a better way of getting the sighting
     private void Start()
@@ -26,14 +29,20 @@ public class Sighting : NetworkBehaviour
         harvestBar = GameObject.Find("HUD/HarvestPanel");
         GetComponent<Interactable>().Setup(SpriteEnum.AnomolusMaterialItem, "Harvest Material")
             .OnInteract += Interact;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log("Setting toggle active");
         active.OnValueChanged += ToggleActive;
+        gameObject.SetActive(active.Value);
     }
 
     private void Update()
     {
         if (holding)
         {
-            float percent = (Time.time - startedHolding) / holdTime;
+            float percent = (Time.time - startedHolding) / HOLD_TIME;
             harvestBar.transform.Find("Percent").GetComponent<Image>().fillAmount = 1-percent;
             if (percent >= 1)
             {
@@ -45,6 +54,7 @@ public class Sighting : NetworkBehaviour
         {
             harvestBar.SetActive(false);
         }
+
         if (!IsServer)
             return;
 
@@ -63,14 +73,23 @@ public class Sighting : NetworkBehaviour
 
     private void ToggleActive(bool _, bool state)
     {
+        Debug.Log("Active state " + state);
         gameObject.SetActive(state);
     }
 
     private void Interact()
     {
+        ItemSlot slot = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
+        string heldType = slot.item?.id ?? "anomolusMaterial";
+
+        if (heldType != "anomolusMaterial")
+            return;
+
         if (!holding)
         {
             startedHolding = Time.time;
+            holding = true;
+            InteractRpc(NetworkManager.Singleton.LocalClientId);
             //ItemDesc giveItem = Instantiate(material);
             //giveItem.GetComponent<StackableChecker>().amount = 1;
             //if (InventoryManager.instance.ArmItem(giveItem))
@@ -83,7 +102,41 @@ public class Sighting : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void InteractRpc(ulong id)
     {
+        EquipmentContainer container = NetworkManager.Singleton.ConnectedClients[id].PlayerObject.GetComponent<EquipmentContainer>();
 
+        ItemSlot slot = container.GetEquipmentItem(SlotType.Hand);
+
+        string heldType = slot.item?.id ?? "anomolusMaterial";
+
+        if (heldType != "anomolusMaterial")
+            return;
+
+        float time = serverHoldTimes.TryGetValue(id, out var result) ? result : 0f;
+        if (time + HOLD_TIME < Time.time)
+        {
+            ItemDesc item = ItemFinder.FindInstanced("anomolusMaterial");
+            (item.checker as StackableChecker).amount = 1;
+
+            item.checker.TryInsert(slot);
+
+            if (item.transform.parent == null)
+                Destroy(item.gameObject);
+
+            PickupMaterialRpc(RpcTarget.Single(id, RpcTargetUse.Temp));
+        }
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    public void PickupMaterialRpc(RpcParams rpcParams)
+    {
+        ItemSlot slot = EquipmentContainer.instance.GetEquipmentItem(SlotType.Hand);
+        ItemDesc item = ItemFinder.FindInstanced("anomolusMaterial");
+        (item.checker as StackableChecker).amount = 1;
+
+        item.checker.TryInsert(slot);
+
+        if (item.transform.parent==null)
+            Destroy(item.gameObject);
     }
 
     [Rpc(SendTo.Server)]
