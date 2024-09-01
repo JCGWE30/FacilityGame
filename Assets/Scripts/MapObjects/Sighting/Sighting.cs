@@ -71,13 +71,19 @@ public class Sighting : NetworkBehaviour
         if (!holding)
         {
             startedHolding = Time.time;
-            ItemDesc giveItem = Instantiate(material);
-            giveItem.GetComponent<StackableChecker>().amount = 1;
-            if (InventoryManager.instance.ArmItem(giveItem))
-                holding = true;
-            else
-                Destroy(giveItem);
+            //ItemDesc giveItem = Instantiate(material);
+            //giveItem.GetComponent<StackableChecker>().amount = 1;
+            //if (InventoryManager.instance.ArmItem(giveItem))
+            //    holding = true;
+            //else
+            //    Destroy(giveItem);
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void InteractRpc(ulong id)
+    {
+
     }
 
     [Rpc(SendTo.Server)]
