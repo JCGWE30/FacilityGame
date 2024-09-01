@@ -3709,6 +3709,7 @@ GameObject:
   - component: {fileID: 432936624}
   - component: {fileID: 432936623}
   - component: {fileID: 432936622}
+  - component: {fileID: 432936627}
   - component: {fileID: 432936621}
   - component: {fileID: 432936626}
   m_Layer: 6
@@ -3829,6 +3830,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f03e6dede2ee343b253f10265cfea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &432936627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432936620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3866839300
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!4 &455844193 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4821148953836132172, guid: 64d96caefdfc4eb408da07d790f4bf9a, type: 3}

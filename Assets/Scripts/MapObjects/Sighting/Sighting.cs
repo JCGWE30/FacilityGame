@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Sighting : MonoBehaviour
+public class Sighting : NetworkBehaviour
 {
+
     public ItemDesc material;
 
-    private bool started;
+    private NetworkVariable<bool> active = new NetworkVariable<bool>(true);
+
     private bool holding;
     private float holdTime = 2f;
     private float startedHolding;
@@ -16,17 +19,14 @@ public class Sighting : MonoBehaviour
     private Vector3 position;
     private GameObject harvestBar;
 
-    private static Sighting sighting;
-    public static Sighting getSighting()
-    {
-        return sighting;
-    }
+    public static Sighting sighting; //Have a better way of getting the sighting
     private void Start()
     {
         sighting = this;
         harvestBar = GameObject.Find("HUD/HarvestPanel");
         GetComponent<Interactable>().Setup(SpriteEnum.AnomolusMaterialItem, "Harvest Material")
             .OnInteract += Interact;
+        active.OnValueChanged += ToggleActive;
     }
 
     private void Update()
@@ -45,18 +45,25 @@ public class Sighting : MonoBehaviour
         {
             harvestBar.SetActive(false);
         }
+        if (!IsServer)
+            return;
+
         if (endtime < Time.time)
         {
-            started = false;
-            gameObject.SetActive(false);
+            active.Value = false;
         }
     }
 
     public void StartSighting(float time)
     {
+        active.Value = true;
         gameObject.SetActive(true);
-        started = true;
         endtime = Time.time + time;
+    }
+
+    private void ToggleActive(bool _, bool state)
+    {
+        gameObject.SetActive(state);
     }
 
     private void Interact()
@@ -71,5 +78,11 @@ public class Sighting : MonoBehaviour
             else
                 Destroy(giveItem);
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void StartSightingRpc()
+    {
+        StartSighting(10f);
     }
 }
