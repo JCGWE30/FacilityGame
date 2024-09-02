@@ -10,6 +10,8 @@ using UnityEngine.UIElements;
 
 public class CommandManager : MonoBehaviour
 {
+    //TODO rework this class to handle server side execution within the same class, also just make it look nicer
+
     private Transform player;
     private InputManager manager;
     private InventoryManager inven;
@@ -64,6 +66,10 @@ public class CommandManager : MonoBehaviour
                     }
                 }
             }
+        }
+        if(command == "startSighting")
+        {
+            Sighting.sighting.StartSightingRpc();
         }
     }
 

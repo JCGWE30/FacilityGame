@@ -23,6 +23,7 @@ public enum SpriteEnum
     ArrowIcon,
     FabricationIcon,
     IDChipIcon,
+    purewhite,
     ResearchBackground,
     TFAIcon
 }
