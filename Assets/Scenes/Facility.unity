@@ -7120,6 +7120,7 @@ GameObject:
   - component: {fileID: 853470745}
   - component: {fileID: 853470747}
   - component: {fileID: 853470746}
+  - component: {fileID: 853470748}
   m_Layer: 5
   m_Name: HarvestPanel
   m_TagString: Untagged
@@ -7186,6 +7187,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 853470744}
   m_CullTransparentMesh: 1
+--- !u!114 &853470748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853470744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3180202bed6670b4ab67081650a2b6bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: {fileID: 853470744}
+  cooldownBar: {fileID: 2080270157}
 --- !u!1 &855439019
 GameObject:
   m_ObjectHideFlags: 0
@@ -16811,7 +16826,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 97019e5e997208c40ad764896157b826, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2cd1105b6c0e28d44b8a3b5c48a62eca, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1

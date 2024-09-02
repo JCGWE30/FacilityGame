@@ -14,11 +14,7 @@ public class Sighting : NetworkBehaviour
 
     private NetworkVariable<bool> active = new NetworkVariable<bool>(false);
 
-    private bool holding;
-    private float startedHolding;
     private float endtime;
-    private Vector3 position;
-    private GameObject harvestBar;
 
     private Dictionary<ulong, float> serverHoldTimes = new Dictionary<ulong, float>();
 
@@ -26,7 +22,6 @@ public class Sighting : NetworkBehaviour
     private void Start()
     {
         sighting = this;
-        harvestBar = GameObject.Find("HUD/HarvestPanel");
         GetComponent<Interactable>().Setup(SpriteEnum.AnomolusMaterialItem, "Harvest Material")
             .OnInteract += Interact;
     }
@@ -40,21 +35,6 @@ public class Sighting : NetworkBehaviour
 
     private void Update()
     {
-        if (holding)
-        {
-            float percent = (Time.time - startedHolding) / HOLD_TIME;
-            harvestBar.transform.Find("Percent").GetComponent<Image>().fillAmount = 1-percent;
-            if (percent >= 1)
-            {
-                holding = false;
-            }
-            harvestBar.SetActive(true);
-        }
-        else
-        {
-            harvestBar.SetActive(false);
-        }
-
         if (!IsServer)
             return;
 
@@ -85,10 +65,9 @@ public class Sighting : NetworkBehaviour
         if (heldType != "anomolusMaterial")
             return;
 
-        if (!holding)
+        if (SightingCooldown.canHold)
         {
-            startedHolding = Time.time;
-            holding = true;
+            SightingCooldown.instance.StartCooldown(Time.time + HOLD_TIME);
             InteractRpc(NetworkManager.Singleton.LocalClientId);
             //ItemDesc giveItem = Instantiate(material);
             //giveItem.GetComponent<StackableChecker>().amount = 1;
